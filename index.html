@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Houston Metro Study Map</title>
+<title>Houston People Groups Map · Ministry Field Guide</title>
 <style>
   :root {
     /* Editorial atlas palette */
@@ -531,6 +531,111 @@
     font-family: "Iowan Old Style", "Georgia", serif;
   }
 
+  /* People group list */
+  .pg-list {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .pg {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 12px;
+    padding: 12px 14px;
+    background: #f9f1de;
+    border: 1px solid var(--rule-soft);
+    border-radius: 8px;
+    align-items: start;
+  }
+  .pg-name {
+    font-family: "Iowan Old Style", serif;
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .pg-meta {
+    color: var(--ink-mute);
+    font-size: 12px;
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  .pg-note {
+    grid-column: 1 / -1;
+    color: var(--ink-soft);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 2px;
+    font-style: italic;
+  }
+  .pg-status {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    align-self: start;
+    line-height: 1;
+  }
+  .pg-status.unreached {
+    background: rgba(194, 97, 58, 0.15);
+    color: #8a3e1f;
+    border: 1px solid rgba(194, 97, 58, 0.4);
+  }
+  .pg-status.less-reached {
+    background: rgba(198, 150, 53, 0.15);
+    color: #7a5712;
+    border: 1px solid rgba(198, 150, 53, 0.45);
+  }
+  .pg-status.reached {
+    background: rgba(111, 140, 112, 0.18);
+    color: #3d573e;
+    border: 1px solid rgba(111, 140, 112, 0.45);
+  }
+
+  /* Pray points */
+  .pray {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .pray li {
+    position: relative;
+    padding: 10px 0 10px 26px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .pray li:last-child { border-bottom: none; }
+  .pray li::before {
+    content: "✦";
+    position: absolute;
+    left: 0; top: 11px;
+    color: var(--terracotta);
+    font-size: 12px;
+  }
+
+  /* Sources line */
+  .sources {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+    font-size: 11px;
+    color: var(--ink-mute);
+    line-height: 1.55;
+    font-style: italic;
+  }
+  .sources a {
+    color: var(--terracotta);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--terracotta-soft);
+  }
+
   /* ===== Footer ===== */
   footer {
     border-top: 1px solid var(--rule);
@@ -612,10 +717,10 @@
 <div class="app">
   <header>
     <div class="brand">
-      <span class="eyebrow">Field Guide № 01</span>
+      <span class="eyebrow">Ministry Field Guide · Houston</span>
     </div>
-    <h1>Houston Metro Study Map</h1>
-    <div class="subtitle">A bird's-eye field guide to fourteen distinct communities — click any region to open its dossier.</div>
+    <h1>To Reach the Unreached</h1>
+    <div class="subtitle">A people-groups map of Greater Houston — one of the most ethnically diverse cities in North America, and a strategic gateway to the nations. Click any region to see who lives there, what they believe, and how to pray.</div>
   </header>
 
   <main>
@@ -860,252 +965,324 @@
     <aside id="panel" class="panel empty">
       <div class="empty-state">
         <div class="seal">✦</div>
-        <h2>Begin your survey</h2>
-        <p>Select any region on the map to open its field dossier.</p>
+        <h2>Begin with prayer</h2>
+        <p>Select any region on the map to see the people groups present, the spiritual landscape, and how to pray for that community.</p>
       </div>
     </aside>
   </main>
 
   <footer>
     <div class="footer-meta">
-      <span><span class="counter" id="zone-count">14</span> regions catalogued</span>
+      <span><span class="counter" id="zone-count">14</span> regions</span>
       <span class="sep"></span>
-      <span>Greater Houston</span>
+      <span>Sourced from <a href="https://joshuaproject.net/" target="_blank" rel="noopener" style="color:var(--terracotta);text-decoration:none;border-bottom:1px dotted var(--terracotta-soft);">Joshua Project</a>, <a href="https://globalgates.info/unreached-peoples-of-houston/" target="_blank" rel="noopener" style="color:var(--terracotta);text-decoration:none;border-bottom:1px dotted var(--terracotta-soft);">Global Gates</a>, US Census &amp; refugee resettlement reports</span>
     </div>
     <label class="study-toggle">
       <span>Study Mode</span>
       <input type="checkbox" id="study-toggle" />
       <span class="switch"></span>
-      <span id="studied-counter" style="display:none; color: var(--ink-mute); font-weight: 500;">Studied <span class="counter" id="studied-count">0</span> / 14</span>
+      <span id="studied-counter" style="display:none; color: var(--ink-mute); font-weight: 500;">Prayed <span class="counter" id="studied-count">0</span> / 14</span>
     </label>
   </footer>
 </div>
 
 <script>
+/* Status legend: "unreached" = <2% evangelical (Joshua Project def), often Hindu/Muslim/Buddhist;
+   "less-reached" = some witness present but church not indigenous to the people group;
+   "reached" = established gospel-rooted community.
+   Population numbers are approximate metro-wide unless noted; neighborhood concentrations
+   are drawn from the cited sources. */
 const ZONE_DATA = {
   downtown: {
     name: "Downtown Houston",
     county: "Harris",
-    character: "The financial and cultural core of Houston — skyscrapers, stadiums, museums, and the theater district all converge here.",
-    population: "~10,000 residents (1M+ work/visit daily)",
-    distanceFromDowntown: "0 miles — this IS downtown",
-    incorporated: "City of Houston",
-    majorEmployers: ["JPMorgan Chase", "Chevron", "Shell", "Federal courts", "Harris County government"],
-    knownFor: [
-      "4th largest skyline in the US",
-      "Theater District — second largest in the nation after NYC",
-      "Toyota Center (Rockets) and Minute Maid Park (Astros) are walking distance apart"
+    distance: "0 mi · the core",
+    snapshot: "A daytime city of office workers, conventions, and stadiums; small but rising residential population. Cultural and political center of Greater Houston.",
+    peopleGroups: [
+      { name: "African American", lang: "English", religion: "Christian (Black Baptist, AME)", status: "reached", note: "Deep historical Black church presence in Third Ward and along Almeda." },
+      { name: "Anglo professionals", lang: "English", religion: "Mainline / Post-Christian", status: "less-reached", note: "Many young workers culturally Christian but not actively churched." },
+      { name: "Hispanic urban", lang: "Spanish / English", religion: "Catholic / Pentecostal", status: "less-reached" },
+      { name: "Unhoused community", lang: "English", religion: "Mixed", status: "less-reached", note: "Concentrated near shelters east of downtown." }
     ],
-    highways: ["I-10", "I-45", "I-69/US-59", "I-69/US-290", "Loop 610"],
-    hook: "If Houston is a country, Downtown is its capital — dense, loud, and always building upward."
+    spiritual: "Historic Black church corridor (Third Ward), downtown cathedrals, growing post-Christian young professional class.",
+    strategic: "Workplace ministry to professionals; partnership with established Black congregations; mercy ministry to unhoused.",
+    pray: [
+      "For the gospel to penetrate Houston's marketplace and corporate halls.",
+      "For unity and revival among historic downtown Black churches.",
+      "For dignified, gospel-saturated mercy ministry among the unhoused."
+    ],
+    hook: "From Houston's center, every people group in the metro is within reach."
   },
+
   midtown: {
     name: "Midtown / Montrose",
     county: "Harris",
-    character: "Houston's most walkable, artsy, and culturally eclectic corridor — restaurants, galleries, bars, and historic bungalows packed together.",
-    population: "~25,000",
-    distanceFromDowntown: "1–3 miles southwest",
-    incorporated: "City of Houston",
-    majorEmployers: ["Restaurant/hospitality industry", "Arts organizations", "Small businesses"],
-    knownFor: [
-      "Restaurant Row on Westheimer — one of the densest dining strips in the city",
-      "Menil Collection — world-class free art museum",
-      "Some of the oldest and most distinct Houston architecture and street life"
+    distance: "1–3 mi SW",
+    snapshot: "Houston's most walkable, artsy, post-Christian neighborhood — center of the city's LGBTQ+ community, the arts scene, and secular young professionals.",
+    peopleGroups: [
+      { name: "Anglo creatives & young professionals", lang: "English", religion: "Secular / Post-Christian", status: "less-reached", note: "Largely de-churched. Open to spiritual conversation, skeptical of institutional church." },
+      { name: "LGBTQ+ community", lang: "English", religion: "Secular / Spiritual-but-not-religious", status: "less-reached", note: "Houston's most visible LGBTQ+ population centered here." },
+      { name: "Hispanic urban", lang: "Spanish / English", religion: "Catholic", status: "less-reached" }
     ],
-    highways: ["US-59/I-69", "TX-527 (Spur)"],
-    hook: "Montrose is where Houston gets weird — in the best way. Think Austin vibes inside a Texas megacity."
+    spiritual: "Post-Christian secular humanism; cultural Catholicism; nominal mainline. Genuine evangelical witness present but small.",
+    strategic: "Third-place / café ministry, art-engaged churches, hospitality-driven witness. Truth + grace in cultural conversations.",
+    pray: [
+      "For Christ-centered relational witness in Houston's most secular district.",
+      "For believers to engage with humility, not retreat in fear.",
+      "For LGBTQ+ neighbors to encounter the love and welcome of Jesus."
+    ],
+    hook: "Where Houston is most secular — and most spiritually open if approached with grace."
   },
+
   heights: {
     name: "The Heights",
     county: "Harris",
-    character: "Historic inner-loop neighborhood with Victorian homes, boutique shops, and a strong community identity — one of Houston's oldest suburbs.",
-    population: "~40,000",
-    distanceFromDowntown: "2–4 miles northwest",
-    incorporated: "City of Houston (annexed)",
-    majorEmployers: ["Small business", "Retail", "Creative industry"],
-    knownFor: [
-      "19th-century bungalows and Victorian homes on tree-lined streets",
-      "Hike-and-bike trail along White Oak Bayou",
-      "Heights Mercantile and antique shops along 19th Street"
+    distance: "2–4 mi NW",
+    snapshot: "Historic gentrified neighborhood — young Anglo families, restored Victorian homes, boutique shops. Strong neighborhood identity.",
+    peopleGroups: [
+      { name: "Anglo young families", lang: "English", religion: "Mainline / non-denom / nominal", status: "reached", note: "Many know church culture; fewer are actively discipled." },
+      { name: "Hispanic legacy residents", lang: "Spanish / English", religion: "Catholic", status: "less-reached", note: "Pre-gentrification community still present, often displaced." }
     ],
-    highways: ["I-10 West", "I-610 North Loop"],
-    hook: "The Heights was its own city before Houston swallowed it — it still acts like it."
+    spiritual: "Pockets of vibrant evangelical and Anglican plants; mainline historic churches; many cultural-Christian families.",
+    strategic: "Family-focused church planting; intentional cross-class friendship between newcomers and legacy Hispanic residents.",
+    pray: [
+      "For families to move from cultural Christianity to living discipleship.",
+      "For gentrification to be confronted with gospel-shaped justice.",
+      "For unity between new church plants and historic parishes."
+    ],
+    hook: "Heights families look reached on the surface — but cultural Christianity isn't the same as Christ."
   },
+
   galleria: {
     name: "Galleria / Uptown",
     county: "Harris",
-    character: "Houston's premier commercial and luxury district — corporate towers, high-end retail, and a dense urban feel without being downtown.",
-    population: "~25,000 residents (massive daytime population)",
-    distanceFromDowntown: "6 miles west",
-    incorporated: "City of Houston",
-    majorEmployers: ["ConocoPhillips", "Waste Management", "Accounting/law firms", "Luxury retail"],
-    knownFor: [
-      "The Galleria — largest mall in Texas, 400+ stores including an ice rink",
-      "Post Oak Boulevard — Houston's answer to a proper urban boulevard",
-      "More hotel rooms per square mile than almost anywhere in Texas"
+    distance: "6 mi W (incl. Sharpstown / Hillcroft corridor)",
+    snapshot: "Affluent commercial core — but its southwestern edge bleeds into Sharpstown and the Mahatma Gandhi District (Hillcroft), one of the most concentrated South Asian corridors in North America.",
+    peopleGroups: [
+      { name: "Gujarati Hindus", lang: "Gujarati", religion: "Hindu", status: "unreached", note: "~27,000 in the Houston metro per Global Gates. Concentrated in Mahatma Gandhi District (Hillcroft) and Sugar Land. Largely unreached even in diaspora." },
+      { name: "Hindi-speaking Indians", lang: "Hindi", religion: "Hindu", status: "unreached", note: "Significant population centered around Hillcroft." },
+      { name: "Pakistani Muslims", lang: "Urdu / Punjabi", religion: "Islam (Sunni)", status: "unreached", note: "Pakistani-American Association estimated ~60,000 in Greater Houston, many in Southwest Houston near here." },
+      { name: "Affluent Anglo professionals", lang: "English", religion: "Mainline / non-denom", status: "reached" }
     ],
-    highways: ["I-610 West Loop", "US-59/I-69", "Westheimer Rd"],
-    hook: "Uptown is what Houston built when it wanted to feel like a real city — and it worked."
+    spiritual: "Hindu temples, Sunni mosques, Sikh gurdwaras dot the corridor. Several large evangelical churches operate nearby but few engage UPGs cross-culturally.",
+    strategic: "Sharpstown / Mahatma Gandhi District is arguably the single most strategic mile of ground in Houston for unreached people group ministry. Hospitality, ESL, and friendship evangelism are key entry points.",
+    pray: [
+      "For Gujarati Hindus to encounter the living Christ — a people group largely without witness even in diaspora.",
+      "For laborers willing to learn Urdu, Hindi, or Gujarati.",
+      "For Anglo-majority churches to repent of insularity and pursue their unreached neighbors."
+    ],
+    hook: "The mall is just the surface — under it runs the Hillcroft corridor: Houston's Hindu and Muslim heart."
   },
+
   memorial: {
     name: "Memorial / Energy Corridor",
     county: "Harris",
-    character: "Affluent residential west Houston blending into the global oil & gas industry hub — executives, engineers, and old-money Houston money.",
-    population: "~70,000 (corridor area)",
-    distanceFromDowntown: "10–15 miles west",
-    incorporated: "City of Houston / unincorporated Harris County",
-    majorEmployers: ["BP America", "Shell", "Wood Group", "Technip Energies", "Hunting Energy"],
-    knownFor: [
-      "Energy Corridor — home to more oil & gas HQs than anywhere outside of a national capital",
-      "Memorial Park — 1,500 acres, one of the largest urban parks in the US",
-      "Memorial Villages — six exclusive small municipalities (Bunker Hill, Piney Point, etc.)"
+    distance: "10–15 mi W",
+    snapshot: "Affluent residential west Houston blending into the global oil & gas headquarters corridor — one of the largest concentrations of oil execs, engineers, and international expats outside a national capital.",
+    peopleGroups: [
+      { name: "International oil & gas expats", lang: "English / Arabic / French / etc.", religion: "Mixed (Christian, Muslim, Hindu, secular)", status: "less-reached", note: "Saudi, Emirati, Norwegian, British, French, Nigerian, Indian, Brazilian executives and families on temporary assignment. Many return home within 3–7 years." },
+      { name: "Affluent Anglo families", lang: "English", religion: "Evangelical / Mainline", status: "reached", note: "Memorial Villages are heavily churched." }
     ],
-    highways: ["I-10 West (Katy Freeway)", "Beltway 8 / Sam Houston Tollway"],
-    hook: "This is where the oil money lives and works — the corridor that powers Houston's economy."
+    spiritual: "Strong evangelical and mainline presence among Anglo residents; significant Muslim presence in expat housing along Eldridge and Highway 6.",
+    strategic: "Diaspora ministry with eternal upside — every reached expat returns home a missionary. International schools, expat clubs, and corporate housing are key relational entry points.",
+    pray: [
+      "For Saudi, Emirati, and Gulf-state expats to encounter the gospel during their Houston years.",
+      "For affluent Memorial families to recognize unreached neighbors and act.",
+      "For Christian businesspeople to see their work as sending strategy."
+    ],
+    hook: "Reach an Energy Corridor expat in Houston, and you may have just reached a country."
   },
+
   katy: {
     name: "Katy",
     county: "Harris / Fort Bend / Waller",
-    character: "Sprawling far-west suburb — master-planned communities, top-rated schools, and the widest freeway in the world connecting it to Houston.",
-    population: "~230,000 (metro area)",
-    distanceFromDowntown: "30 miles west",
-    incorporated: "City of Katy (small core) + unincorporated subdivisions",
-    majorEmployers: ["Academy Sports HQ", "Igloo Products", "Retail/distribution", "Katy ISD"],
-    knownFor: [
-      "Katy ISD — one of the largest and most respected school districts in Texas",
-      "I-10 through Katy is the widest freeway in the world at 26 lanes at its peak",
-      "LaCenterra and Katy Mills — major retail destinations for the region"
+    distance: "30 mi W",
+    snapshot: "Sprawling far-west suburb. Greater Katy's Asian American population was around 40,000 by 2019 and has grown sharply since — driven largely by Indian, Chinese, and Pakistani families drawn by the schools.",
+    peopleGroups: [
+      { name: "Indian Hindus & Sikhs", lang: "Hindi / Tamil / Telugu / Punjabi", religion: "Hindu / Sikh", status: "unreached", note: "Many H-1B and tech families. Hindu temples and a Sikh gurdwara serve the community." },
+      { name: "Chinese", lang: "Mandarin", religion: "Folk religion / Buddhist / secular", status: "unreached", note: "Katy Asia Town (H Mart corridor) is a primary cultural hub." },
+      { name: "Pakistani Muslims", lang: "Urdu", religion: "Islam (Sunni)", status: "unreached" },
+      { name: "Vietnamese", lang: "Vietnamese", religion: "Buddhist / Catholic", status: "less-reached" },
+      { name: "Anglo suburban families", lang: "English", religion: "Evangelical", status: "reached", note: "Katy is a Bible-belt suburb with many large evangelical churches." }
     ],
-    highways: ["I-10 West (Katy Freeway)", "TX-99 Grand Parkway"],
-    hook: "Katy = kids, Chick-fil-A, and the widest road on earth. Suburban Houston at maximum scale."
+    spiritual: "Strong evangelical presence among Anglo families; Hindu temples, mosques, Buddhist and Sikh worship sites woven into the suburbs.",
+    strategic: "Schools, youth sports, and shared neighborhoods are natural bridges. Many strong sending churches here — but few engage their UPG neighbors.",
+    pray: [
+      "For Anglo-majority churches in Katy to look across the cul-de-sac.",
+      "For 2nd-generation Indian, Chinese, and Pakistani youth to find Christ.",
+      "For believing parents to disciple kids into cross-cultural friendship."
+    ],
+    hook: "Katy ISD is a mission field. The kids on your kid's team come from a hundred unreached homes."
   },
+
   sugarland: {
     name: "Sugar Land",
     county: "Fort Bend",
-    character: "Affluent, master-planned city with one of the most diverse populations in Texas — strong South Asian and Chinese-American communities.",
-    population: "~118,000",
-    distanceFromDowntown: "20 miles southwest",
-    incorporated: "City of Sugar Land",
-    majorEmployers: ["Fluor Corporation HQ", "Minute Maid (Coca-Cola)", "Texas Instruments", "Houston Methodist Sugar Land Hospital"],
-    knownFor: [
-      "Imperial Sugar Company historic site — the city literally grew from a sugar plantation and refinery",
-      "One of the most ethnically diverse and affluent suburbs in the entire US",
-      "Smart Financial Centre — major concert/events venue"
+    distance: "20 mi SW",
+    snapshot: "One of America's most ethnically diverse and affluent suburbs. Together with Mid-West Houston / Hillcroft, this is where most of Houston's unreached South Asian Hindus and Muslims live.",
+    peopleGroups: [
+      { name: "Gujarati Hindus", lang: "Gujarati", religion: "Hindu", status: "unreached", note: "Heavy concentration here and in Hillcroft. ~27,000 in the metro per Global Gates." },
+      { name: "Tamil & Telugu Hindus", lang: "Tamil / Telugu", religion: "Hindu", status: "unreached" },
+      { name: "Punjabi Sikhs", lang: "Punjabi", religion: "Sikh", status: "unreached" },
+      { name: "Pakistani Muslims", lang: "Urdu", religion: "Islam (Sunni)", status: "unreached" },
+      { name: "Chinese", lang: "Mandarin / Cantonese", religion: "Folk / Buddhist / secular", status: "unreached" },
+      { name: "Affluent Anglo families", lang: "English", religion: "Evangelical / Mainline", status: "reached" }
     ],
-    highways: ["US-59/I-69 Southwest", "TX-6", "Fort Bend Tollway"],
-    hook: "Sugar Land went from sugar cane fields to one of America's most diverse boomtowns in two generations."
+    spiritual: "Major Hindu temple complexes (BAPS Swaminarayan), large mosques, gurdwaras. A handful of South Asian-led churches exist but are vastly outnumbered.",
+    strategic: "The single highest-leverage zip code cluster for South Asian diaspora ministry in the United States. Need: gospel laborers fluent in South Asian languages and cultures.",
+    pray: [
+      "For South Asian-language pastors to be raised up here.",
+      "For Sugar Land's affluent believers to disciple cross-culturally.",
+      "For breakthrough among Gujarati Hindus, where there is virtually no indigenous gospel movement worldwide."
+    ],
+    hook: "If India is hard to enter, Sugar Land is open. The unreached have come to us."
   },
+
   pearland: {
     name: "Pearland",
     county: "Brazoria (partially Harris)",
-    character: "One of the fastest-growing cities in the US — young families, new developments, and a strategic location between the Med Center and JSC.",
-    population: "~130,000",
-    distanceFromDowntown: "16 miles south",
-    incorporated: "City of Pearland",
-    majorEmployers: ["Houston Methodist Pearland", "Memorial Hermann", "HEB", "Engineering/defense contractors near JSC"],
-    knownFor: [
-      "Consistently ranked one of the fastest-growing cities in the US for over a decade",
-      "Proximity to both Texas Medical Center (north) and Johnson Space Center (southeast)",
-      "Shadow Creek Ranch — one of the largest master-planned communities in Texas"
+    distance: "16 mi S",
+    snapshot: "One of America's fastest-growing cities — and one of its most diverse. Roughly a quarter Asian, a quarter Hispanic, a fifth Black, the rest Anglo. A multi-ethnic future-of-suburbia city.",
+    peopleGroups: [
+      { name: "Vietnamese", lang: "Vietnamese", religion: "Buddhist / Catholic", status: "less-reached", note: "Substantial Vietnamese presence, with both Catholic and Buddhist communities." },
+      { name: "Chinese & Indian families", lang: "Mandarin / Hindi", religion: "Folk / Hindu", status: "unreached" },
+      { name: "African American families", lang: "English", religion: "Christian (Baptist, non-denom)", status: "reached" },
+      { name: "Hispanic families", lang: "Spanish / English", religion: "Catholic / Pentecostal", status: "less-reached" },
+      { name: "Anglo families", lang: "English", religion: "Evangelical", status: "reached" }
     ],
-    highways: ["TX-288", "Beltway 8 / Sam Houston Tollway", "TX-35"],
-    hook: "Pearland = pear trees once grew here. Now it grows subdivisions faster than anywhere in Texas."
+    spiritual: "Multi-ethnic and rapidly changing. Significant evangelical presence but few churches reflect the actual demographics of the neighborhoods.",
+    strategic: "Multi-ethnic church planting target. New developments offer fresh ground.",
+    pray: [
+      "For multi-ethnic churches that look like the actual neighborhoods.",
+      "For 2nd-generation Asian Pearland kids to encounter Christ in school and sport.",
+      "For Spanish-speaking and English-speaking believers to plant together."
+    ],
+    hook: "Pearland is a preview of the next America — and a preview of what the church must become."
   },
+
   clearlake: {
     name: "Clear Lake / NASA",
     county: "Harris",
-    character: "Space industry suburb on the shores of Clear Lake — engineers, astronauts, and aerospace contractors live and work here.",
-    population: "~95,000",
-    distanceFromDowntown: "25 miles southeast",
-    incorporated: "City of Houston (Clear Lake City) + City of Nassau Bay + others",
-    majorEmployers: ["NASA Johnson Space Center", "Boeing", "Lockheed Martin", "Raytheon", "Jacobs Engineering"],
-    knownFor: [
-      "Johnson Space Center — home of Mission Control, astronaut training, and the Apollo program legacy",
-      "Space Center Houston — major science museum and NASA visitor center",
-      "Clear Lake itself — popular boating and waterfront dining destination"
+    distance: "25 mi SE",
+    snapshot: "Affluent space-industry suburbs. Significant Vietnamese-American community established since post-war refugee resettlement; engineers and aerospace contractors from around the world.",
+    peopleGroups: [
+      { name: "Vietnamese", lang: "Vietnamese", religion: "Buddhist / Catholic", status: "less-reached", note: "Houston has the largest Vietnamese population in Texas and 3rd largest in the US. Many concentrated south of here in Alvin and along the Gulf Freeway." },
+      { name: "Aerospace engineers (international)", lang: "English / Russian / Japanese / etc.", religion: "Mixed", status: "less-reached", note: "JSC partners with space agencies worldwide; international engineers rotate through Clear Lake." },
+      { name: "Anglo professionals", lang: "English", religion: "Evangelical / Catholic", status: "reached" }
     ],
-    highways: ["I-45 South (Gulf Freeway)", "NASA Road 1 / El Camino Real", "TX-146"],
-    hook: "Houston said 'we have a problem' from right here. The city where humans learned to go to the moon."
+    spiritual: "Vietnamese Buddhist temples and Catholic parishes; established Anglo evangelical presence; secular scientific worldview common.",
+    strategic: "Vietnamese-language ministry; engagement with intellectual / scientific community on questions of meaning and origins.",
+    pray: [
+      "For Vietnamese Buddhist neighbors — a people group still largely unreached.",
+      "For believing scientists and engineers to integrate faith and vocation publicly.",
+      "For international JSC partners to encounter Christ during their assignment."
+    ],
+    hook: "Engineers go to the moon from here. Pray they reach Heaven too — and bring their Vietnamese neighbors with them."
   },
+
   pasadena: {
     name: "Pasadena / Baytown",
     county: "Harris",
-    character: "Industrial eastern corridor — petrochemical plants, ship channel infrastructure, and blue-collar working communities.",
-    population: "~155,000 (Pasadena) + ~85,000 (Baytown)",
-    distanceFromDowntown: "15–25 miles east",
-    incorporated: "City of Pasadena / City of Baytown",
-    majorEmployers: ["ExxonMobil Baytown Complex (largest in the US)", "Chevron Phillips Chemical", "LyondellBasell", "Port of Houston operations"],
-    knownFor: [
-      "ExxonMobil Baytown — largest petrochemical complex in the Western Hemisphere",
-      "Houston Ship Channel — the economic artery that made Houston a global port city",
-      "San Jacinto Monument — taller than the Washington Monument, marks where Texas won independence"
+    distance: "15–25 mi E",
+    snapshot: "Industrial east-side corridor. Pasadena is roughly two-thirds Hispanic — heavily Mexican-American, with significant Central American and growing Honduran / Salvadoran populations.",
+    peopleGroups: [
+      { name: "Mexican-American (multi-generational)", lang: "Spanish / English", religion: "Catholic / Pentecostal", status: "less-reached", note: "Many nominally Catholic; growing Pentecostal and evangelical movement." },
+      { name: "Central American immigrants", lang: "Spanish", religion: "Catholic / Evangelical", status: "less-reached", note: "Honduran, Salvadoran, Guatemalan growth in the last decade." },
+      { name: "Anglo working class", lang: "English", religion: "Baptist / Pentecostal", status: "reached" }
     ],
-    highways: ["I-10 East", "TX-225", "TX-146", "TX-99 Grand Parkway"],
-    hook: "This is the industrial backbone of Houston — unglamorous, essential, and historically significant."
+    spiritual: "Catholic majority among Hispanic residents, but Pentecostal and Spanish-speaking Baptist churches are growing rapidly.",
+    strategic: "Spanish-speaking discipleship and church planting; ministry to immigrants navigating documentation and integration.",
+    pray: [
+      "For Spanish-speaking pastors and church planters.",
+      "For nominal Catholics to encounter living faith in Christ.",
+      "For dignified ministry to undocumented neighbors."
+    ],
+    hook: "On Houston's industrial edge, the gospel often arrives in Spanish."
   },
+
   northside: {
     name: "Northside / Greenspoint",
     county: "Harris",
-    character: "Dense, working-class north Houston with a large Hispanic community and significant commercial/distribution activity.",
-    population: "~100,000+",
-    distanceFromDowntown: "12–18 miles north",
-    incorporated: "City of Houston",
-    majorEmployers: ["George Bush Intercontinental Airport (IAH)", "Distribution/logistics centers", "Manufacturing"],
-    knownFor: [
-      "George Bush Intercontinental Airport (IAH) — one of the busiest airports in the US",
-      "Greenspoint Mall area — major commercial hub undergoing redevelopment",
-      "Large Mexican-American cultural identity — authentic taquerias, markets, and community"
+    distance: "12–18 mi N",
+    snapshot: "Working-class north Houston around IAH airport — the primary refugee resettlement zone for Greater Houston. Apartment complexes here host newly arrived families from the world's hardest places.",
+    peopleGroups: [
+      { name: "Mexican-American", lang: "Spanish / English", religion: "Catholic / Pentecostal", status: "less-reached", note: "Long-established Hispanic community." },
+      { name: "Afghan refugees", lang: "Dari / Pashto", religion: "Islam (Sunni)", status: "unreached", note: "Houston received the largest number of Afghan evacuees in the US (~5,117) per State Dept reports — many resettled in apartments here." },
+      { name: "Iraqi refugees", lang: "Arabic", religion: "Islam / Chaldean Catholic", status: "unreached" },
+      { name: "Somali refugees", lang: "Somali / Arabic", religion: "Islam (Sunni)", status: "unreached" },
+      { name: "Eritrean & Sudanese", lang: "Tigrinya / Arabic", religion: "Orthodox Christian / Muslim", status: "less-reached" },
+      { name: "Burmese (Karen, Chin, Rohingya)", lang: "Karen / Chin / Rohingya", religion: "Christian / Buddhist / Muslim", status: "unreached", note: "Karen and Chin are largely Christian; Rohingya are unreached Muslim." },
+      { name: "Bhutanese (Nepali-speaking)", lang: "Nepali", religion: "Hindu", status: "unreached" },
+      { name: "Congolese", lang: "Swahili / French / Lingala", religion: "Christian", status: "less-reached" }
     ],
-    highways: ["I-45 North", "I-69/US-59 North", "Beltway 8 North"],
-    hook: "The gateway to Houston from the north — gritty, real, and home to one of America's biggest airports."
+    spiritual: "The widest spiritual diversity of any single Houston zone. Refugee apartment complexes around Greenspoint and along Aldine-Westfield are home to dozens of UPGs at once.",
+    strategic: "This is where the nations have been brought to Houston's doorstep. Refugee resettlement agencies (USCRI, Interfaith Ministries, YMCA International) provide entry points; ESL, hospitality, and trauma-informed ministry are critical.",
+    pray: [
+      "For Afghan, Somali, and Rohingya neighbors who fled war to encounter the Prince of Peace.",
+      "For Houston believers to volunteer with refugee resettlement.",
+      "For laborers fluent in Dari, Arabic, Somali, Nepali, Karen, and Chin."
+    ],
+    hook: "The 10/40 Window has come to Houston — and most of it lives within 10 miles of the airport."
   },
+
   thewoodlands: {
     name: "The Woodlands",
     county: "Montgomery",
-    character: "Masterfully planned community where the forest was preserved around the development — upscale, safe, corporate, and immaculately maintained.",
-    population: "~120,000",
-    distanceFromDowntown: "28 miles north",
-    incorporated: "Unincorporated (The Woodlands Township)",
-    majorEmployers: ["ExxonMobil (campus relocated here)", "Huntsman Corporation HQ", "Aon Hewitt", "St. Luke's Health System"],
-    knownFor: [
-      "Every neighborhood is built around existing trees — 28% of the land is preserved forest",
-      "Cynthia Woods Mitchell Pavilion — major outdoor amphitheater hosting top national acts",
-      "Town Center waterway — walkable, European-feel commercial district with gondolas"
+    distance: "28 mi N",
+    snapshot: "Master-planned, predominantly Anglo, affluent, immaculately maintained. One of the most heavily evangelical-churched suburbs in America.",
+    peopleGroups: [
+      { name: "Anglo families", lang: "English", religion: "Evangelical (heavy SBC, non-denom)", status: "reached", note: "The Woodlands UMC, Woodlands Church, and others draw tens of thousands weekly." },
+      { name: "Corporate transplants", lang: "English", religion: "Mainline / Catholic / Evangelical", status: "reached", note: "ExxonMobil HQ campus drew many international transferees here." },
+      { name: "Growing Asian / Indian families", lang: "English / Hindi / Mandarin", religion: "Hindu / Christian / secular", status: "less-reached" }
     ],
-    highways: ["I-45 North", "TX-99 Grand Parkway"],
-    hook: "The Woodlands is what Houston planned when it had the luxury of planning. Everything is intentional — even the trees."
+    spiritual: "Strong, mature, mission-minded evangelical base. Significant resources and trained believers concentrated here.",
+    strategic: "A sending and equipping base. The Woodlands churches can fund, train, and send laborers into the harder Houston zones (Sharpstown, Northside, Pasadena) and to the nations.",
+    pray: [
+      "For Woodlands churches to send their best to the unreached, not just receive.",
+      "For affluent comfort to not anesthetize believers to lostness.",
+      "For Indian and Chinese families moving in to be seen and welcomed."
+    ],
+    hook: "If Sharpstown is the field, The Woodlands must be the barn — sending laborers, not stockpiling resources."
   },
+
   humble: {
     name: "Humble / Kingwood",
     county: "Harris",
-    character: "Northeastern suburbs combining older Humble (oil industry roots) with upscale Kingwood — called the 'Livable Forest.'",
-    population: "~80,000 (Humble area) + Kingwood ~80,000",
-    distanceFromDowntown: "22–28 miles northeast",
-    incorporated: "City of Humble / City of Houston (Kingwood annexed 1996)",
-    majorEmployers: ["IAH Airport corridor employers", "Humble ISD", "Healthcare", "Oil field services"],
-    knownFor: [
-      "Humble was the original Texas oil boomtown — the 1905 Humble oil field predates the entire Houston oil industry",
-      "Kingwood's 'Livable Forest' branding — 25,000 acres of preserved pines woven through subdivisions",
-      "Lake Houston — major recreational lake just northeast of the community"
+    distance: "22–28 mi NE",
+    snapshot: "Northeastern suburbs — Kingwood (the 'Livable Forest') is upscale and Anglo-dominant; Humble proper is more working-class and increasingly Hispanic.",
+    peopleGroups: [
+      { name: "Anglo suburban families", lang: "English", religion: "Evangelical / mainline", status: "reached" },
+      { name: "Hispanic families (Humble proper)", lang: "Spanish / English", religion: "Catholic / Pentecostal", status: "less-reached" },
+      { name: "African American", lang: "English", religion: "Christian", status: "reached" }
     ],
-    highways: ["US-59/I-69 Northeast", "Beltway 8 East", "FM 1960"],
-    hook: "Humble (pronounced 'Umble' by locals) started it all — Texas oil was born here before Houston knew what it had."
+    spiritual: "Healthy evangelical church presence; Spanish-speaking churches growing in the older Humble core.",
+    strategic: "Suburban relational outreach; bilingual youth ministry in Humble ISD; partnership between Kingwood megachurches and Humble Hispanic plants.",
+    pray: [
+      "For Kingwood-Humble socioeconomic divides to be bridged by gospel friendship.",
+      "For Spanish-speaking pastors and youth leaders in Humble.",
+      "For new families moving in to find a church home quickly."
+    ],
+    hook: "The forest hides many homes. Pray that no neighbor stays anonymous."
   },
+
   friendswood: {
     name: "Friendswood / League City",
     county: "Galveston / Harris",
-    character: "Quiet, family-oriented south Houston suburbs on the corridor between Pearland and Clear Lake — safe, clean, and well-regarded schools.",
-    population: "~42,000 (Friendswood) + ~115,000 (League City)",
-    distanceFromDowntown: "22–28 miles south-southeast",
-    incorporated: "City of Friendswood / City of League City",
-    majorEmployers: ["NASA/JSC contractor spillover", "Clear Creek ISD", "Healthcare", "Retail/services"],
-    knownFor: [
-      "Friendswood was founded by Quakers in 1895 — one of the few Quaker communities in Texas",
-      "League City is one of the fastest-growing cities in Texas, fueled by JSC-area employment",
-      "Both cities consistently rank among the safest communities in the Houston metro"
+    distance: "22–28 mi SSE",
+    snapshot: "Quaker-founded, family-oriented south Houston suburbs. Predominantly Anglo with growing Hispanic and Asian populations spilling over from Pearland and Clear Lake.",
+    peopleGroups: [
+      { name: "Anglo families", lang: "English", religion: "Evangelical / Quaker heritage / mainline", status: "reached", note: "Friendswood was founded by Quakers in 1895." },
+      { name: "JSC contractor families (international)", lang: "English / various", religion: "Mixed", status: "less-reached" },
+      { name: "Growing Hispanic & Asian families", lang: "Spanish / Vietnamese / Hindi", religion: "Catholic / Buddhist / Hindu", status: "less-reached" }
     ],
-    highways: ["I-45 South", "TX-96", "FM 518", "FM 2094"],
-    hook: "Quakers founded Friendswood. Rocket engineers filled League City. History and aerospace in the same zip code."
+    spiritual: "Strong evangelical base with Quaker historical roots; growing diversity not yet matched by church diversity.",
+    strategic: "Sending and equipping base; intentional welcoming of JSC international families; bilingual children's ministry.",
+    pray: [
+      "For Friendswood's deep Christian heritage to bear fresh fruit in this generation.",
+      "For believers to befriend international JSC families.",
+      "For League City's growth to be met with church-planting fervor."
+    ],
+    hook: "Quakers planted the seed here. Pray a new generation tends what they sowed."
   }
 };
 
@@ -1123,50 +1300,71 @@ function escapeHTML(s) {
   }[c]));
 }
 
+const STATUS_LABEL = {
+  unreached: "Unreached",
+  "less-reached": "Less Reached",
+  reached: "Reached"
+};
+
 function renderCard(id) {
   const z = ZONE_DATA[id];
   if (!z) return;
   panel.classList.remove('empty');
+
+  const pgItems = z.peopleGroups.map(p => `
+    <li class="pg">
+      <div>
+        <div class="pg-name">${escapeHTML(p.name)}</div>
+        <div class="pg-meta">${escapeHTML(p.lang)} · ${escapeHTML(p.religion)}</div>
+        ${p.note ? `<div class="pg-note">${escapeHTML(p.note)}</div>` : ''}
+      </div>
+      <span class="pg-status ${p.status}">${STATUS_LABEL[p.status] || p.status}</span>
+    </li>
+  `).join('');
+
   panel.innerHTML = `
-    <div class="card-eyebrow">Region Dossier</div>
+    <div class="card-eyebrow">People Groups · Ministry Profile</div>
     <h2 class="card-name">${escapeHTML(z.name)}</h2>
     <div class="card-meta">
       <span>${escapeHTML(z.county)} County</span>
       <span class="dot"></span>
-      <span>${escapeHTML(z.distanceFromDowntown)}</span>
+      <span>${escapeHTML(z.distance)}</span>
     </div>
 
     <div class="section">
-      <h3>Character</h3>
-      <p class="character">${escapeHTML(z.character)}</p>
+      <h3>Snapshot</h3>
+      <p class="character">${escapeHTML(z.snapshot)}</p>
     </div>
 
     <div class="section">
-      <h3>Vital Statistics</h3>
-      <div class="facts">
-        <div class="row"><div class="label">Population</div><div class="val">${escapeHTML(z.population)}</div></div>
-        <div class="row"><div class="label">Incorporated</div><div class="val">${escapeHTML(z.incorporated)}</div></div>
-        <div class="row"><div class="label">Employers</div><div class="val">${z.majorEmployers.map(escapeHTML).join(' · ')}</div></div>
-      </div>
+      <h3>People Groups Present</h3>
+      <ul class="pg-list">${pgItems}</ul>
     </div>
 
     <div class="section">
-      <h3>Known For</h3>
-      <ul class="bullets">
-        ${z.knownFor.map(k => `<li>${escapeHTML(k)}</li>`).join('')}
+      <h3>Spiritual Landscape</h3>
+      <p class="character">${escapeHTML(z.spiritual)}</p>
+    </div>
+
+    <div class="section">
+      <h3>Strategic Notes</h3>
+      <p class="character">${escapeHTML(z.strategic)}</p>
+    </div>
+
+    <div class="section">
+      <h3>Pray</h3>
+      <ul class="pray">
+        ${z.pray.map(p => `<li>${escapeHTML(p)}</li>`).join('')}
       </ul>
     </div>
 
     <div class="section">
-      <h3>Routes In</h3>
-      <div class="chips">
-        ${z.highways.map(h => `<span class="chip">${escapeHTML(h)}</span>`).join('')}
-      </div>
+      <h3>Remember</h3>
+      <div class="hook">${escapeHTML(z.hook)}</div>
     </div>
 
-    <div class="section">
-      <h3>Mnemonic</h3>
-      <div class="hook">${escapeHTML(z.hook)}</div>
+    <div class="sources">
+      Data drawn from <a href="https://joshuaproject.net/" target="_blank" rel="noopener">Joshua Project</a> definitions, <a href="https://globalgates.info/unreached-peoples-of-houston/" target="_blank" rel="noopener">Global Gates' Unreached Peoples of Houston</a>, US Census &amp; ACS demographics, and US State Department refugee resettlement reports. Population figures and ethnic concentrations are approximate; verify locally before deploying ministry strategy.
     </div>
   `;
   panel.scrollTop = 0;
