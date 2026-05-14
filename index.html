@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Houston Metro Study Map</title>
+<style>
+  :root {
+    /* Editorial atlas palette */
+    --paper: #f5ede0;
+    --paper-2: #ede2cf;
+    --ink: #1f2a3b;
+    --ink-soft: #3d4a60;
+    --ink-mute: #6b7889;
+    --rule: #d8c9ae;
+    --rule-soft: #e6d8be;
+    --terracotta: #c2613a;
+    --terracotta-soft: #e3a37e;
+    --gold: #c69635;
+    --sage: #6f8c70;
+    --water: #afc7d7;
+    --water-deep: #88adc4;
+    --water-line: #6e96b1;
+
+    /* Zone palette — varied, muted, distinguishable */
+    --z-downtown: #3d4a60;
+    --z-midtown:  #8a6a7a;
+    --z-heights:  #7a8b5a;
+    --z-galleria: #b07d3b;
+    --z-memorial: #9c8d5e;
+    --z-katy:     #a3956a;
+    --z-sugar:    #b58a4f;
+    --z-pearland: #a87c6a;
+    --z-clear:    #5a8a8c;
+    --z-pasadena: #6e6a5a;
+    --z-northside:#8b6a4a;
+    --z-woodlands:#5a7a55;
+    --z-humble:   #6f8a72;
+    --z-friend:   #7c8c9c;
+
+    --shadow-card: 0 2px 0 rgba(31,42,59,0.05), 0 14px 40px -18px rgba(31,42,59,0.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+
+  /* Subtle paper texture */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(194, 97, 58, 0.04), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(111, 140, 112, 0.05), transparent 40%);
+    z-index: 0;
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ===== Header ===== */
+  header {
+    padding: 28px 36px 22px;
+    border-bottom: 1px solid var(--rule);
+    background: linear-gradient(180deg, #f9f2e6 0%, var(--paper) 100%);
+    position: relative;
+  }
+  header::after {
+    content: "";
+    position: absolute;
+    left: 36px; right: 36px; bottom: -1px;
+    height: 1px;
+    background: var(--rule-soft);
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .brand .eyebrow {
+    font-family: "Iowan Old Style", "Georgia", serif;
+    font-style: italic;
+    color: var(--terracotta);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  header h1 {
+    margin: 6px 0 4px;
+    font-family: "Iowan Old Style", "Georgia", "Times New Roman", serif;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: var(--ink);
+  }
+  header .subtitle {
+    color: var(--ink-mute);
+    font-size: 14px;
+    max-width: 560px;
+    line-height: 1.5;
+  }
+
+  /* ===== Main grid ===== */
+  main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 65fr 35fr;
+    gap: 24px;
+    padding: 24px 36px;
+    min-height: 0;
+  }
+
+  /* ===== Map ===== */
+  .map-card {
+    background: linear-gradient(160deg, #fbf5e8 0%, #f0e6d2 100%);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+  .map-card::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px dashed var(--rule);
+    border-radius: 10px;
+    pointer-events: none;
+  }
+  .map-card svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: calc(100vh - 240px);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* SVG zones */
+  .zone {
+    cursor: pointer;
+    transition: opacity 0.18s ease, transform 0.18s ease, filter 0.18s ease;
+    transform-origin: center;
+    transform-box: fill-box;
+    fill-opacity: 0.78;
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+  }
+  .zone:hover {
+    fill-opacity: 1;
+    filter: drop-shadow(0 4px 8px rgba(31,42,59,0.18));
+  }
+  .zone.selected {
+    fill-opacity: 1;
+    stroke: var(--terracotta) !important;
+    stroke-width: 2.4;
+    filter: drop-shadow(0 0 0 4px rgba(194,97,58,0.18)) drop-shadow(0 6px 14px rgba(194,97,58,0.35));
+  }
+
+  .water-fill {
+    fill: var(--water);
+    stroke: var(--water-deep);
+    stroke-width: 1;
+    pointer-events: none;
+  }
+  .bayou {
+    fill: none;
+    stroke: var(--water-line);
+    stroke-linecap: round;
+    pointer-events: none;
+    opacity: 0.75;
+  }
+
+  .grid-line {
+    stroke: rgba(31, 42, 59, 0.06);
+    stroke-width: 1;
+    pointer-events: none;
+  }
+
+  .zone-label {
+    fill: var(--ink);
+    font-family: "Iowan Old Style", "Georgia", serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+    letter-spacing: 0.3px;
+    paint-order: stroke;
+    stroke: rgba(245, 237, 224, 0.85);
+    stroke-width: 3;
+    stroke-linejoin: round;
+  }
+
+  .water-label {
+    fill: var(--water-line);
+    font-family: "Iowan Old Style", "Georgia", serif;
+    font-style: italic;
+    font-size: 11px;
+    text-anchor: middle;
+    pointer-events: none;
+    letter-spacing: 1px;
+  }
+
+  .quadrant {
+    fill: var(--ink-mute);
+    font-family: "Iowan Old Style", "Georgia", serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-anchor: middle;
+    pointer-events: none;
+    opacity: 0.45;
+  }
+
+  .study-mode .zone-label { display: none; }
+
+  /* Compass rose */
+  .compass-ring { fill: rgba(245, 237, 224, 0.85); stroke: var(--rule); stroke-width: 1; }
+  .compass-needle-n { fill: var(--terracotta); }
+  .compass-needle-s { fill: var(--ink); opacity: 0.55; }
+  .compass-letter {
+    fill: var(--ink);
+    font-family: "Iowan Old Style", serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-anchor: middle;
+    pointer-events: none;
+  }
+
+  /* Scale bar */
+  .scale-line { stroke: var(--ink); stroke-width: 1.5; }
+  .scale-text {
+    fill: var(--ink-mute);
+    font-size: 10px;
+    font-family: "Iowan Old Style", serif;
+    text-anchor: middle;
+  }
+
+  /* ===== Side panel ===== */
+  .panel {
+    background: #fbf6ea;
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 28px 28px 30px;
+    overflow-y: auto;
+    max-height: calc(100vh - 240px);
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+  .panel::-webkit-scrollbar { width: 8px; }
+  .panel::-webkit-scrollbar-track { background: transparent; }
+  .panel::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+
+  .panel.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--ink-mute);
+    min-height: 280px;
+  }
+  .empty-state {
+    max-width: 240px;
+  }
+  .empty-state .seal {
+    width: 56px; height: 56px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    border: 2px dashed var(--rule);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    color: var(--terracotta);
+  }
+  .empty-state h2 {
+    font-family: "Iowan Old Style", serif;
+    font-size: 18px;
+    margin: 0 0 6px;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .empty-state p { margin: 0; font-size: 13px; line-height: 1.5; }
+
+  /* Card content */
+  .card-eyebrow {
+    color: var(--terracotta);
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .card-name {
+    font-family: "Iowan Old Style", "Georgia", serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    line-height: 1.1;
+    color: var(--ink);
+    letter-spacing: -0.4px;
+  }
+  .card-meta {
+    color: var(--ink-mute);
+    font-size: 13px;
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-meta .dot {
+    width: 4px; height: 4px;
+    background: var(--terracotta);
+    border-radius: 50%;
+  }
+
+  .section { margin-bottom: 22px; }
+  .section h3 {
+    font-family: "Iowan Old Style", serif;
+    margin: 0 0 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section h3::before {
+    content: "";
+    width: 18px; height: 1px;
+    background: var(--terracotta);
+  }
+
+  .character {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.65;
+    margin: 0;
+    font-family: "Iowan Old Style", "Georgia", serif;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    font-size: 14px;
+    color: var(--ink);
+    border-top: 1px solid var(--rule-soft);
+  }
+  .facts .row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    align-items: baseline;
+  }
+  .facts .row .label {
+    color: var(--ink-mute);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+  }
+  .facts .row .val {
+    color: var(--ink-soft);
+    line-height: 1.45;
+  }
+
+  ul.bullets {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  ul.bullets li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 10px;
+  }
+  ul.bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 9px;
+    width: 12px; height: 1px;
+    background: var(--terracotta);
+  }
+  ul.bullets li:last-child { margin-bottom: 0; }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    background: rgba(194, 97, 58, 0.08);
+    border: 1px solid rgba(194, 97, 58, 0.25);
+    color: var(--terracotta);
+    padding: 5px 11px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .hook {
+    position: relative;
+    padding: 18px 20px 18px 30px;
+    background: linear-gradient(135deg, #f7e9d2 0%, #f1deba 100%);
+    border-radius: 8px;
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Georgia", serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .hook::before {
+    content: "“";
+    position: absolute;
+    top: -2px; left: 8px;
+    font-size: 44px;
+    line-height: 1;
+    color: var(--terracotta);
+    font-family: "Iowan Old Style", "Georgia", serif;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 14px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f0e5cf;
+    font-size: 13px;
+    color: var(--ink-soft);
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .footer-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .footer-meta .sep {
+    width: 4px; height: 4px;
+    background: var(--terracotta);
+    border-radius: 50%;
+  }
+  .counter {
+    color: var(--terracotta);
+    font-weight: 700;
+    font-family: "Iowan Old Style", serif;
+    font-size: 14px;
+  }
+  .study-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .study-toggle input { display: none; }
+  .switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    background: var(--rule);
+    border-radius: 999px;
+    transition: background 0.2s;
+    border: 1px solid var(--rule-soft);
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: var(--paper);
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(31,42,59,0.25);
+  }
+  .study-toggle input:checked + .switch { background: var(--terracotta); }
+  .study-toggle input:checked + .switch::after { transform: translateX(18px); }
+
+  /* Responsive */
+  @media (max-width: 920px) {
+    main {
+      grid-template-columns: 1fr;
+      padding: 16px;
+      gap: 16px;
+    }
+    .map-card svg { max-height: none; }
+    .panel { max-height: none; }
+    header { padding: 22px 18px 18px; }
+    header h1 { font-size: 26px; }
+    footer { padding: 12px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <span class="eyebrow">Field Guide № 01</span>
+    </div>
+    <h1>Houston Metro Study Map</h1>
+    <div class="subtitle">A bird's-eye field guide to fourteen distinct communities — click any region to open its dossier.</div>
+  </header>
+
+  <main>
+    <div class="map-card">
+      <svg id="map" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Houston metro map">
+        <!-- Subtle reference grid -->
+        <g>
+          <line class="grid-line" x1="0" y1="250" x2="1000" y2="250" />
+          <line class="grid-line" x1="0" y1="500" x2="1000" y2="500" />
+          <line class="grid-line" x1="0" y1="750" x2="1000" y2="750" />
+          <line class="grid-line" x1="250" y1="0" x2="250" y2="1000" />
+          <line class="grid-line" x1="500" y1="0" x2="500" y2="1000" />
+          <line class="grid-line" x1="750" y1="0" x2="750" y2="1000" />
+        </g>
+
+        <!-- Quadrant labels (faint) -->
+        <text class="quadrant" x="500" y="34">NORTH</text>
+        <text class="quadrant" x="500" y="982">SOUTH</text>
+        <text class="quadrant" x="34" y="505" transform="rotate(-90 34 505)">WEST</text>
+        <text class="quadrant" x="970" y="505" transform="rotate(90 970 505)">EAST</text>
+
+        <!-- Galveston Bay -->
+        <path class="water-fill" d="M 820 540 Q 880 560 920 620 Q 950 720 930 820 Q 900 900 820 920 Q 760 910 760 840 Q 770 760 780 700 Q 790 620 820 540 Z" />
+        <!-- Lake Houston -->
+        <ellipse class="water-fill" cx="710" cy="240" rx="40" ry="55" />
+
+        <!-- Bayou + Ship Channel -->
+        <path class="bayou" stroke-width="3" d="M 200 500 Q 320 495 450 502 Q 510 506 560 510 Q 640 520 720 555 Q 790 590 820 640" />
+        <path class="bayou" stroke-width="2" opacity="0.55" d="M 350 360 Q 410 410 460 470" />
+        <path class="bayou" stroke-width="2" opacity="0.45" d="M 300 640 Q 420 620 520 640 Q 620 660 720 670" />
+
+        <!-- Zones -->
+        <g id="zones">
+          <polygon class="zone" data-zone="downtown" fill="var(--z-downtown)" stroke="#2a3548"
+            points="475,475 525,470 545,495 540,525 510,540 475,535 460,510" />
+          <polygon class="zone" data-zone="midtown" fill="var(--z-midtown)" stroke="#6f5263"
+            points="430,540 475,535 510,540 515,580 480,600 435,590 420,565" />
+          <polygon class="zone" data-zone="heights" fill="var(--z-heights)" stroke="#5e6f43"
+            points="410,400 470,395 480,440 470,475 425,480 395,455 390,425" />
+          <polygon class="zone" data-zone="galleria" fill="var(--z-galleria)" stroke="#8a5e25"
+            points="335,485 395,490 420,520 410,560 365,575 325,555 315,515" />
+          <polygon class="zone" data-zone="memorial" fill="var(--z-memorial)" stroke="#7d7048"
+            points="200,440 285,435 320,470 310,520 245,535 185,510 175,470" />
+          <polygon class="zone" data-zone="katy" fill="var(--z-katy)" stroke="#827552"
+            points="50,440 145,430 175,470 165,520 90,540 35,515 25,475" />
+          <polygon class="zone" data-zone="sugarland" fill="var(--z-sugar)" stroke="#8d6a37"
+            points="240,650 320,640 365,680 355,725 280,745 210,720 205,680" />
+          <polygon class="zone" data-zone="pearland" fill="var(--z-pearland)" stroke="#825e4d"
+            points="430,690 510,685 555,725 540,770 470,790 410,760 400,720" />
+          <polygon class="zone" data-zone="friendswood" fill="var(--z-friend)" stroke="#5e6c7a"
+            points="555,755 625,755 670,790 660,840 595,860 545,830 540,790" />
+          <polygon class="zone" data-zone="clearlake" fill="var(--z-clear)" stroke="#406769"
+            points="660,720 740,720 760,755 740,805 685,815 645,790 645,750" />
+          <polygon class="zone" data-zone="pasadena" fill="var(--z-pasadena)" stroke="#4f4c40"
+            points="600,510 700,510 740,545 745,590 695,615 625,615 595,575" />
+          <polygon class="zone" data-zone="northside" fill="var(--z-northside)" stroke="#674c33"
+            points="475,300 555,295 590,330 585,370 530,395 475,385 450,345" />
+          <polygon class="zone" data-zone="thewoodlands" fill="var(--z-woodlands)" stroke="#3f5b3b"
+            points="430,90 530,85 575,125 570,175 510,200 440,185 410,140" />
+          <polygon class="zone" data-zone="humble" fill="var(--z-humble)" stroke="#506b53"
+            points="610,260 685,260 715,300 705,345 660,355 615,335 600,300" />
+        </g>
+
+        <!-- Compass rose -->
+        <g transform="translate(70,90)">
+          <circle class="compass-ring" r="28" />
+          <polygon class="compass-needle-n" points="0,-22 5,0 0,-3 -5,0" />
+          <polygon class="compass-needle-s" points="0,22 5,0 0,3 -5,0" />
+          <polygon class="compass-needle-s" points="-22,0 0,5 -3,0 0,-5" />
+          <polygon class="compass-needle-s" points="22,0 0,5 3,0 0,-5" />
+          <text class="compass-letter" y="-12">N</text>
+        </g>
+
+        <!-- Scale bar -->
+        <g transform="translate(60,940)">
+          <line class="scale-line" x1="0" y1="0" x2="120" y2="0" />
+          <line class="scale-line" x1="0" y1="-4" x2="0" y2="4" />
+          <line class="scale-line" x1="60" y1="-3" x2="60" y2="3" />
+          <line class="scale-line" x1="120" y1="-4" x2="120" y2="4" />
+          <text class="scale-text" x="0" y="18">0</text>
+          <text class="scale-text" x="60" y="18">10</text>
+          <text class="scale-text" x="120" y="18">20 mi</text>
+        </g>
+
+        <!-- Labels -->
+        <g id="labels">
+          <text class="zone-label" x="500" y="510">Downtown</text>
+          <text class="zone-label" x="468" y="572">Midtown</text>
+          <text class="zone-label" x="437" y="442">Heights</text>
+          <text class="zone-label" x="367" y="528">Galleria</text>
+          <text class="zone-label" x="245" y="487">Memorial</text>
+          <text class="zone-label" x="98" y="487">Katy</text>
+          <text class="zone-label" x="285" y="695">Sugar Land</text>
+          <text class="zone-label" x="478" y="742">Pearland</text>
+          <text class="zone-label" x="603" y="810">Friendswood</text>
+          <text class="zone-label" x="700" y="770">Clear Lake</text>
+          <text class="zone-label" x="668" y="565">Pasadena</text>
+          <text class="zone-label" x="520" y="348">Northside</text>
+          <text class="zone-label" x="495" y="145">The Woodlands</text>
+          <text class="zone-label" x="657" y="305">Humble</text>
+        </g>
+
+        <text class="water-label" x="858" y="730">GALVESTON BAY</text>
+        <text class="water-label" x="710" y="245" font-size="9">L. HOUSTON</text>
+        <text class="water-label" x="540" y="495" font-size="9" opacity="0.6">Buffalo Bayou →</text>
+      </svg>
+    </div>
+
+    <aside id="panel" class="panel empty">
+      <div class="empty-state">
+        <div class="seal">✦</div>
+        <h2>Begin your survey</h2>
+        <p>Select any region on the map to open its field dossier.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="footer-meta">
+      <span><span class="counter" id="zone-count">14</span> regions catalogued</span>
+      <span class="sep"></span>
+      <span>Greater Houston</span>
+    </div>
+    <label class="study-toggle">
+      <span>Study Mode</span>
+      <input type="checkbox" id="study-toggle" />
+      <span class="switch"></span>
+      <span id="studied-counter" style="display:none; color: var(--ink-mute); font-weight: 500;">Studied <span class="counter" id="studied-count">0</span> / 14</span>
+    </label>
+  </footer>
+</div>
+
+<script>
+const ZONE_DATA = {
+  downtown: {
+    name: "Downtown Houston",
+    county: "Harris",
+    character: "The financial and cultural core of Houston — skyscrapers, stadiums, museums, and the theater district all converge here.",
+    population: "~10,000 residents (1M+ work/visit daily)",
+    distanceFromDowntown: "0 miles — this IS downtown",
+    incorporated: "City of Houston",
+    majorEmployers: ["JPMorgan Chase", "Chevron", "Shell", "Federal courts", "Harris County government"],
+    knownFor: [
+      "4th largest skyline in the US",
+      "Theater District — second largest in the nation after NYC",
+      "Toyota Center (Rockets) and Minute Maid Park (Astros) are walking distance apart"
+    ],
+    highways: ["I-10", "I-45", "I-69/US-59", "I-69/US-290", "Loop 610"],
+    hook: "If Houston is a country, Downtown is its capital — dense, loud, and always building upward."
+  },
+  midtown: {
+    name: "Midtown / Montrose",
+    county: "Harris",
+    character: "Houston's most walkable, artsy, and culturally eclectic corridor — restaurants, galleries, bars, and historic bungalows packed together.",
+    population: "~25,000",
+    distanceFromDowntown: "1–3 miles southwest",
+    incorporated: "City of Houston",
+    majorEmployers: ["Restaurant/hospitality industry", "Arts organizations", "Small businesses"],
+    knownFor: [
+      "Restaurant Row on Westheimer — one of the densest dining strips in the city",
+      "Menil Collection — world-class free art museum",
+      "Some of the oldest and most distinct Houston architecture and street life"
+    ],
+    highways: ["US-59/I-69", "TX-527 (Spur)"],
+    hook: "Montrose is where Houston gets weird — in the best way. Think Austin vibes inside a Texas megacity."
+  },
+  heights: {
+    name: "The Heights",
+    county: "Harris",
+    character: "Historic inner-loop neighborhood with Victorian homes, boutique shops, and a strong community identity — one of Houston's oldest suburbs.",
+    population: "~40,000",
+    distanceFromDowntown: "2–4 miles northwest",
+    incorporated: "City of Houston (annexed)",
+    majorEmployers: ["Small business", "Retail", "Creative industry"],
+    knownFor: [
+      "19th-century bungalows and Victorian homes on tree-lined streets",
+      "Hike-and-bike trail along White Oak Bayou",
+      "Heights Mercantile and antique shops along 19th Street"
+    ],
+    highways: ["I-10 West", "I-610 North Loop"],
+    hook: "The Heights was its own city before Houston swallowed it — it still acts like it."
+  },
+  galleria: {
+    name: "Galleria / Uptown",
+    county: "Harris",
+    character: "Houston's premier commercial and luxury district — corporate towers, high-end retail, and a dense urban feel without being downtown.",
+    population: "~25,000 residents (massive daytime population)",
+    distanceFromDowntown: "6 miles west",
+    incorporated: "City of Houston",
+    majorEmployers: ["ConocoPhillips", "Waste Management", "Accounting/law firms", "Luxury retail"],
+    knownFor: [
+      "The Galleria — largest mall in Texas, 400+ stores including an ice rink",
+      "Post Oak Boulevard — Houston's answer to a proper urban boulevard",
+      "More hotel rooms per square mile than almost anywhere in Texas"
+    ],
+    highways: ["I-610 West Loop", "US-59/I-69", "Westheimer Rd"],
+    hook: "Uptown is what Houston built when it wanted to feel like a real city — and it worked."
+  },
+  memorial: {
+    name: "Memorial / Energy Corridor",
+    county: "Harris",
+    character: "Affluent residential west Houston blending into the global oil & gas industry hub — executives, engineers, and old-money Houston money.",
+    population: "~70,000 (corridor area)",
+    distanceFromDowntown: "10–15 miles west",
+    incorporated: "City of Houston / unincorporated Harris County",
+    majorEmployers: ["BP America", "Shell", "Wood Group", "Technip Energies", "Hunting Energy"],
+    knownFor: [
+      "Energy Corridor — home to more oil & gas HQs than anywhere outside of a national capital",
+      "Memorial Park — 1,500 acres, one of the largest urban parks in the US",
+      "Memorial Villages — six exclusive small municipalities (Bunker Hill, Piney Point, etc.)"
+    ],
+    highways: ["I-10 West (Katy Freeway)", "Beltway 8 / Sam Houston Tollway"],
+    hook: "This is where the oil money lives and works — the corridor that powers Houston's economy."
+  },
+  katy: {
+    name: "Katy",
+    county: "Harris / Fort Bend / Waller",
+    character: "Sprawling far-west suburb — master-planned communities, top-rated schools, and the widest freeway in the world connecting it to Houston.",
+    population: "~230,000 (metro area)",
+    distanceFromDowntown: "30 miles west",
+    incorporated: "City of Katy (small core) + unincorporated subdivisions",
+    majorEmployers: ["Academy Sports HQ", "Igloo Products", "Retail/distribution", "Katy ISD"],
+    knownFor: [
+      "Katy ISD — one of the largest and most respected school districts in Texas",
+      "I-10 through Katy is the widest freeway in the world at 26 lanes at its peak",
+      "LaCenterra and Katy Mills — major retail destinations for the region"
+    ],
+    highways: ["I-10 West (Katy Freeway)", "TX-99 Grand Parkway"],
+    hook: "Katy = kids, Chick-fil-A, and the widest road on earth. Suburban Houston at maximum scale."
+  },
+  sugarland: {
+    name: "Sugar Land",
+    county: "Fort Bend",
+    character: "Affluent, master-planned city with one of the most diverse populations in Texas — strong South Asian and Chinese-American communities.",
+    population: "~118,000",
+    distanceFromDowntown: "20 miles southwest",
+    incorporated: "City of Sugar Land",
+    majorEmployers: ["Fluor Corporation HQ", "Minute Maid (Coca-Cola)", "Texas Instruments", "Houston Methodist Sugar Land Hospital"],
+    knownFor: [
+      "Imperial Sugar Company historic site — the city literally grew from a sugar plantation and refinery",
+      "One of the most ethnically diverse and affluent suburbs in the entire US",
+      "Smart Financial Centre — major concert/events venue"
+    ],
+    highways: ["US-59/I-69 Southwest", "TX-6", "Fort Bend Tollway"],
+    hook: "Sugar Land went from sugar cane fields to one of America's most diverse boomtowns in two generations."
+  },
+  pearland: {
+    name: "Pearland",
+    county: "Brazoria (partially Harris)",
+    character: "One of the fastest-growing cities in the US — young families, new developments, and a strategic location between the Med Center and JSC.",
+    population: "~130,000",
+    distanceFromDowntown: "16 miles south",
+    incorporated: "City of Pearland",
+    majorEmployers: ["Houston Methodist Pearland", "Memorial Hermann", "HEB", "Engineering/defense contractors near JSC"],
+    knownFor: [
+      "Consistently ranked one of the fastest-growing cities in the US for over a decade",
+      "Proximity to both Texas Medical Center (north) and Johnson Space Center (southeast)",
+      "Shadow Creek Ranch — one of the largest master-planned communities in Texas"
+    ],
+    highways: ["TX-288", "Beltway 8 / Sam Houston Tollway", "TX-35"],
+    hook: "Pearland = pear trees once grew here. Now it grows subdivisions faster than anywhere in Texas."
+  },
+  clearlake: {
+    name: "Clear Lake / NASA",
+    county: "Harris",
+    character: "Space industry suburb on the shores of Clear Lake — engineers, astronauts, and aerospace contractors live and work here.",
+    population: "~95,000",
+    distanceFromDowntown: "25 miles southeast",
+    incorporated: "City of Houston (Clear Lake City) + City of Nassau Bay + others",
+    majorEmployers: ["NASA Johnson Space Center", "Boeing", "Lockheed Martin", "Raytheon", "Jacobs Engineering"],
+    knownFor: [
+      "Johnson Space Center — home of Mission Control, astronaut training, and the Apollo program legacy",
+      "Space Center Houston — major science museum and NASA visitor center",
+      "Clear Lake itself — popular boating and waterfront dining destination"
+    ],
+    highways: ["I-45 South (Gulf Freeway)", "NASA Road 1 / El Camino Real", "TX-146"],
+    hook: "Houston said 'we have a problem' from right here. The city where humans learned to go to the moon."
+  },
+  pasadena: {
+    name: "Pasadena / Baytown",
+    county: "Harris",
+    character: "Industrial eastern corridor — petrochemical plants, ship channel infrastructure, and blue-collar working communities.",
+    population: "~155,000 (Pasadena) + ~85,000 (Baytown)",
+    distanceFromDowntown: "15–25 miles east",
+    incorporated: "City of Pasadena / City of Baytown",
+    majorEmployers: ["ExxonMobil Baytown Complex (largest in the US)", "Chevron Phillips Chemical", "LyondellBasell", "Port of Houston operations"],
+    knownFor: [
+      "ExxonMobil Baytown — largest petrochemical complex in the Western Hemisphere",
+      "Houston Ship Channel — the economic artery that made Houston a global port city",
+      "San Jacinto Monument — taller than the Washington Monument, marks where Texas won independence"
+    ],
+    highways: ["I-10 East", "TX-225", "TX-146", "TX-99 Grand Parkway"],
+    hook: "This is the industrial backbone of Houston — unglamorous, essential, and historically significant."
+  },
+  northside: {
+    name: "Northside / Greenspoint",
+    county: "Harris",
+    character: "Dense, working-class north Houston with a large Hispanic community and significant commercial/distribution activity.",
+    population: "~100,000+",
+    distanceFromDowntown: "12–18 miles north",
+    incorporated: "City of Houston",
+    majorEmployers: ["George Bush Intercontinental Airport (IAH)", "Distribution/logistics centers", "Manufacturing"],
+    knownFor: [
+      "George Bush Intercontinental Airport (IAH) — one of the busiest airports in the US",
+      "Greenspoint Mall area — major commercial hub undergoing redevelopment",
+      "Large Mexican-American cultural identity — authentic taquerias, markets, and community"
+    ],
+    highways: ["I-45 North", "I-69/US-59 North", "Beltway 8 North"],
+    hook: "The gateway to Houston from the north — gritty, real, and home to one of America's biggest airports."
+  },
+  thewoodlands: {
+    name: "The Woodlands",
+    county: "Montgomery",
+    character: "Masterfully planned community where the forest was preserved around the development — upscale, safe, corporate, and immaculately maintained.",
+    population: "~120,000",
+    distanceFromDowntown: "28 miles north",
+    incorporated: "Unincorporated (The Woodlands Township)",
+    majorEmployers: ["ExxonMobil (campus relocated here)", "Huntsman Corporation HQ", "Aon Hewitt", "St. Luke's Health System"],
+    knownFor: [
+      "Every neighborhood is built around existing trees — 28% of the land is preserved forest",
+      "Cynthia Woods Mitchell Pavilion — major outdoor amphitheater hosting top national acts",
+      "Town Center waterway — walkable, European-feel commercial district with gondolas"
+    ],
+    highways: ["I-45 North", "TX-99 Grand Parkway"],
+    hook: "The Woodlands is what Houston planned when it had the luxury of planning. Everything is intentional — even the trees."
+  },
+  humble: {
+    name: "Humble / Kingwood",
+    county: "Harris",
+    character: "Northeastern suburbs combining older Humble (oil industry roots) with upscale Kingwood — called the 'Livable Forest.'",
+    population: "~80,000 (Humble area) + Kingwood ~80,000",
+    distanceFromDowntown: "22–28 miles northeast",
+    incorporated: "City of Humble / City of Houston (Kingwood annexed 1996)",
+    majorEmployers: ["IAH Airport corridor employers", "Humble ISD", "Healthcare", "Oil field services"],
+    knownFor: [
+      "Humble was the original Texas oil boomtown — the 1905 Humble oil field predates the entire Houston oil industry",
+      "Kingwood's 'Livable Forest' branding — 25,000 acres of preserved pines woven through subdivisions",
+      "Lake Houston — major recreational lake just northeast of the community"
+    ],
+    highways: ["US-59/I-69 Northeast", "Beltway 8 East", "FM 1960"],
+    hook: "Humble (pronounced 'Umble' by locals) started it all — Texas oil was born here before Houston knew what it had."
+  },
+  friendswood: {
+    name: "Friendswood / League City",
+    county: "Galveston / Harris",
+    character: "Quiet, family-oriented south Houston suburbs on the corridor between Pearland and Clear Lake — safe, clean, and well-regarded schools.",
+    population: "~42,000 (Friendswood) + ~115,000 (League City)",
+    distanceFromDowntown: "22–28 miles south-southeast",
+    incorporated: "City of Friendswood / City of League City",
+    majorEmployers: ["NASA/JSC contractor spillover", "Clear Creek ISD", "Healthcare", "Retail/services"],
+    knownFor: [
+      "Friendswood was founded by Quakers in 1895 — one of the few Quaker communities in Texas",
+      "League City is one of the fastest-growing cities in Texas, fueled by JSC-area employment",
+      "Both cities consistently rank among the safest communities in the Houston metro"
+    ],
+    highways: ["I-45 South", "TX-96", "FM 518", "FM 2094"],
+    hook: "Quakers founded Friendswood. Rocket engineers filled League City. History and aerospace in the same zip code."
+  }
+};
+
+const panel = document.getElementById('panel');
+const studyToggle = document.getElementById('study-toggle');
+const studiedCounterWrap = document.getElementById('studied-counter');
+const studiedCount = document.getElementById('studied-count');
+const map = document.getElementById('map');
+const studied = new Set();
+let selectedZone = null;
+
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function renderCard(id) {
+  const z = ZONE_DATA[id];
+  if (!z) return;
+  panel.classList.remove('empty');
+  panel.innerHTML = `
+    <div class="card-eyebrow">Region Dossier</div>
+    <h2 class="card-name">${escapeHTML(z.name)}</h2>
+    <div class="card-meta">
+      <span>${escapeHTML(z.county)} County</span>
+      <span class="dot"></span>
+      <span>${escapeHTML(z.distanceFromDowntown)}</span>
+    </div>
+
+    <div class="section">
+      <h3>Character</h3>
+      <p class="character">${escapeHTML(z.character)}</p>
+    </div>
+
+    <div class="section">
+      <h3>Vital Statistics</h3>
+      <div class="facts">
+        <div class="row"><div class="label">Population</div><div class="val">${escapeHTML(z.population)}</div></div>
+        <div class="row"><div class="label">Incorporated</div><div class="val">${escapeHTML(z.incorporated)}</div></div>
+        <div class="row"><div class="label">Employers</div><div class="val">${z.majorEmployers.map(escapeHTML).join(' · ')}</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Known For</h3>
+      <ul class="bullets">
+        ${z.knownFor.map(k => `<li>${escapeHTML(k)}</li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="section">
+      <h3>Routes In</h3>
+      <div class="chips">
+        ${z.highways.map(h => `<span class="chip">${escapeHTML(h)}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Mnemonic</h3>
+      <div class="hook">${escapeHTML(z.hook)}</div>
+    </div>
+  `;
+  panel.scrollTop = 0;
+}
+
+function selectZone(id, el) {
+  if (selectedZone) selectedZone.classList.remove('selected');
+  el.classList.add('selected');
+  selectedZone = el;
+  renderCard(id);
+  if (studyToggle.checked) {
+    studied.add(id);
+    studiedCount.textContent = studied.size;
+  }
+}
+
+document.querySelectorAll('.zone').forEach(el => {
+  el.addEventListener('click', () => selectZone(el.dataset.zone, el));
+  el.setAttribute('tabindex', '0');
+  el.setAttribute('role', 'button');
+  el.setAttribute('aria-label', ZONE_DATA[el.dataset.zone].name);
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      selectZone(el.dataset.zone, el);
+    }
+  });
+});
+
+studyToggle.addEventListener('change', () => {
+  if (studyToggle.checked) {
+    map.classList.add('study-mode');
+    studiedCounterWrap.style.display = 'inline';
+  } else {
+    map.classList.remove('study-mode');
+    studiedCounterWrap.style.display = 'none';
+  }
+});
+
+document.getElementById('zone-count').textContent = Object.keys(ZONE_DATA).length;
+</script>
+</body>
+</html>
