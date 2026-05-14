@@ -231,6 +231,90 @@
     opacity: 0.45;
   }
 
+  /* Highways */
+  .highway {
+    fill: none;
+    stroke: #b89968;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+    opacity: 0.78;
+  }
+  .highway-major { stroke-width: 3.2; opacity: 0.88; }
+  .ring-road {
+    fill: none;
+    stroke: #c2613a;
+    stroke-width: 1.4;
+    stroke-dasharray: 6 5;
+    stroke-linecap: round;
+    pointer-events: none;
+    opacity: 0.45;
+  }
+  .ring-label {
+    fill: var(--terracotta);
+    font-family: "Iowan Old Style", serif;
+    font-size: 10px;
+    font-style: italic;
+    text-anchor: middle;
+    pointer-events: none;
+    opacity: 0.75;
+    letter-spacing: 1.5px;
+  }
+  .hwy-shield-bg {
+    fill: #f9f1de;
+    stroke: #5a4226;
+    stroke-width: 1.2;
+  }
+  .hwy-shield-text {
+    fill: #2a1c0c;
+    font-family: ui-sans-serif, "Helvetica Neue", sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    text-anchor: middle;
+    pointer-events: none;
+    letter-spacing: 0.2px;
+  }
+  .county-line {
+    fill: none;
+    stroke: var(--ink-mute);
+    stroke-width: 1.1;
+    stroke-dasharray: 4 6;
+    opacity: 0.32;
+    pointer-events: none;
+  }
+  .county-label {
+    fill: var(--ink-mute);
+    font-family: "Iowan Old Style", serif;
+    font-style: italic;
+    font-size: 12px;
+    text-anchor: middle;
+    pointer-events: none;
+    opacity: 0.55;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .landmark-dot {
+    fill: var(--terracotta);
+    stroke: #fbf6ea;
+    stroke-width: 2;
+    pointer-events: none;
+  }
+  .landmark-label {
+    fill: var(--ink);
+    font-family: "Iowan Old Style", serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+    paint-order: stroke;
+    stroke: rgba(245, 237, 224, 0.9);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+    letter-spacing: 0.3px;
+  }
+
   .study-mode .zone-label { display: none; }
 
   /* Compass rose */
@@ -536,77 +620,207 @@
 
   <main>
     <div class="map-card">
-      <svg id="map" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Houston metro map">
+      <svg id="map" viewBox="0 0 1200 1100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Houston metro map">
         <!-- Subtle reference grid -->
         <g>
-          <line class="grid-line" x1="0" y1="250" x2="1000" y2="250" />
-          <line class="grid-line" x1="0" y1="500" x2="1000" y2="500" />
-          <line class="grid-line" x1="0" y1="750" x2="1000" y2="750" />
-          <line class="grid-line" x1="250" y1="0" x2="250" y2="1000" />
-          <line class="grid-line" x1="500" y1="0" x2="500" y2="1000" />
-          <line class="grid-line" x1="750" y1="0" x2="750" y2="1000" />
+          <line class="grid-line" x1="0" y1="275" x2="1200" y2="275" />
+          <line class="grid-line" x1="0" y1="550" x2="1200" y2="550" />
+          <line class="grid-line" x1="0" y1="825" x2="1200" y2="825" />
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="1100" />
+          <line class="grid-line" x1="600" y1="0" x2="600" y2="1100" />
+          <line class="grid-line" x1="900" y1="0" x2="900" y2="1100" />
         </g>
 
         <!-- Quadrant labels (faint) -->
-        <text class="quadrant" x="500" y="34">NORTH</text>
-        <text class="quadrant" x="500" y="982">SOUTH</text>
-        <text class="quadrant" x="34" y="505" transform="rotate(-90 34 505)">WEST</text>
-        <text class="quadrant" x="970" y="505" transform="rotate(90 970 505)">EAST</text>
+        <text class="quadrant" x="600" y="36">NORTH</text>
+        <text class="quadrant" x="600" y="1080">SOUTH</text>
+        <text class="quadrant" x="36" y="555" transform="rotate(-90 36 555)">WEST</text>
+        <text class="quadrant" x="1170" y="555" transform="rotate(90 1170 555)">EAST</text>
 
+        <!-- ===== County boundaries ===== -->
+        <g>
+          <!-- Harris County outline (rough, central) -->
+          <path class="county-line" d="M 270 290 L 920 290 L 920 620 Q 880 645 870 690 L 870 800 L 700 890 L 460 890 L 360 820 L 320 720 L 320 480 L 270 400 Z" />
+          <!-- Galveston/Brazoria divide south -->
+          <path class="county-line" d="M 700 890 L 950 920" />
+          <!-- Brazoria/Fort Bend west -->
+          <path class="county-line" d="M 460 890 L 380 1020" />
+          <!-- Fort Bend/Harris west -->
+          <path class="county-line" d="M 360 820 L 250 760 L 220 600" />
+          <!-- Waller boundary -->
+          <path class="county-line" d="M 270 290 L 180 230" />
+        </g>
+
+        <!-- County labels -->
+        <g>
+          <text class="county-label" x="600" y="135">MONTGOMERY CO.</text>
+          <text class="county-label" x="170" y="240">WALLER CO.</text>
+          <text class="county-label" x="1015" y="240">LIBERTY CO.</text>
+          <text class="county-label" x="1100" y="540">CHAMBERS CO.</text>
+          <text class="county-label" x="1075" y="965">GALVESTON CO.</text>
+          <text class="county-label" x="490" y="980">BRAZORIA CO.</text>
+          <text class="county-label" x="195" y="950">FORT BEND CO.</text>
+          <text class="county-label" x="500" y="320" font-size="14">HARRIS COUNTY</text>
+        </g>
+
+        <!-- ===== Water bodies ===== -->
         <!-- Galveston Bay -->
-        <path class="water-fill" d="M 820 540 Q 880 560 920 620 Q 950 720 930 820 Q 900 900 820 920 Q 760 910 760 840 Q 770 760 780 700 Q 790 620 820 540 Z" />
+        <path class="water-fill" d="
+          M 855 615
+          Q 905 635 950 685
+          L 1010 715
+          L 1080 705
+          Q 1135 740 1145 800
+          Q 1150 880 1115 940
+          L 1050 985
+          L 970 1010
+          Q 890 1000 855 935
+          L 825 855
+          L 815 770
+          L 825 695
+          Z" />
+        <!-- Trinity Bay (extension of Galveston Bay NE) -->
+        <path class="water-fill" d="M 1010 715 L 1080 705 L 1130 670 L 1145 700 L 1110 740 L 1050 735 Z" opacity="0.85" />
         <!-- Lake Houston -->
-        <ellipse class="water-fill" cx="710" cy="240" rx="40" ry="55" />
+        <ellipse class="water-fill" cx="810" cy="295" rx="42" ry="65" />
+        <!-- Sheldon Reservoir -->
+        <ellipse class="water-fill" cx="780" cy="450" rx="14" ry="20" opacity="0.7" />
+        <!-- Barker / Addicks reservoirs (W) -->
+        <ellipse class="water-fill" cx="295" cy="555" rx="22" ry="14" opacity="0.65" />
+        <ellipse class="water-fill" cx="295" cy="510" rx="20" ry="13" opacity="0.65" />
 
-        <!-- Bayou + Ship Channel -->
-        <path class="bayou" stroke-width="3" d="M 200 500 Q 320 495 450 502 Q 510 506 560 510 Q 640 520 720 555 Q 790 590 820 640" />
-        <path class="bayou" stroke-width="2" opacity="0.55" d="M 350 360 Q 410 410 460 470" />
-        <path class="bayou" stroke-width="2" opacity="0.45" d="M 300 640 Q 420 620 520 640 Q 620 660 720 670" />
+        <!-- ===== Bayous & rivers ===== -->
+        <!-- Buffalo Bayou + Ship Channel -->
+        <path class="bayou" stroke-width="3" d="M 235 545 Q 380 540 500 552 Q 575 558 610 555 Q 700 567 780 595 Q 820 610 855 620" />
+        <!-- White Oak Bayou -->
+        <path class="bayou" stroke-width="2" d="M 380 400 Q 460 440 530 475 Q 580 500 605 540" />
+        <!-- Brays Bayou -->
+        <path class="bayou" stroke-width="2" d="M 320 645 Q 470 635 600 655 Q 720 672 800 685" />
+        <!-- Sims Bayou -->
+        <path class="bayou" stroke-width="1.5" d="M 380 720 Q 510 710 620 720 Q 720 730 790 740" opacity="0.55" />
+        <!-- San Jacinto River (north into Lake Houston, then south) -->
+        <path class="bayou" stroke-width="2" d="M 815 160 Q 825 230 815 290" />
+        <path class="bayou" stroke-width="2.2" d="M 815 360 Q 830 450 830 540 Q 830 590 855 615" />
+        <!-- Cypress Creek (NW of Lake Houston) -->
+        <path class="bayou" stroke-width="1.5" d="M 470 320 Q 580 310 700 320 Q 760 325 800 295" opacity="0.55" />
 
-        <!-- Zones -->
+        <!-- ===== Ring roads ===== -->
+        <ellipse class="ring-road" cx="610" cy="555" rx="80" ry="85" />
+        <ellipse class="ring-road" cx="610" cy="555" rx="180" ry="195" />
+        <ellipse class="ring-road" cx="605" cy="550" rx="370" ry="395" />
+
+        <!-- Ring road labels -->
+        <text class="ring-label" x="610" y="464" transform="rotate(0 610 464)">LOOP 610</text>
+        <text class="ring-label" x="610" y="354">BELTWAY 8</text>
+        <text class="ring-label" x="605" y="148">GRAND PARKWAY · TX-99</text>
+
+        <!-- ===== Highways ===== -->
+        <g>
+          <!-- I-10 (E-W) -->
+          <path class="highway highway-major" d="M 70 555 L 605 558 L 880 565" />
+          <!-- I-45 (N-S) -->
+          <path class="highway highway-major" d="M 615 130 L 615 555 L 605 880" />
+          <!-- I-69 / US-59 (SW to NE) -->
+          <path class="highway highway-major" d="M 290 770 Q 460 670 605 558 Q 695 480 760 380 L 800 320" />
+          <!-- US-290 (NW from downtown) -->
+          <path class="highway" d="M 605 555 L 480 460 L 320 340 L 200 260" />
+          <!-- TX-288 (S from downtown) -->
+          <path class="highway" d="M 605 565 L 555 760 L 540 880" />
+          <!-- TX-225 (E to Pasadena/Baytown) -->
+          <path class="highway" d="M 660 575 L 770 590 L 850 615" />
+          <!-- TX-146 (along bay) -->
+          <path class="highway" d="M 805 615 L 815 740 L 800 850" opacity="0.6" />
+          <!-- I-610 spurs already shown by ring; I-69 north spur to Humble shown above -->
+        </g>
+
+        <!-- Highway shields -->
+        <g>
+          <!-- I-10 W -->
+          <g transform="translate(245,555)"><rect class="hwy-shield-bg" x="-12" y="-9" width="24" height="18" rx="3"/><text class="hwy-shield-text" y="3">10</text></g>
+          <!-- I-10 E -->
+          <g transform="translate(805,565)"><rect class="hwy-shield-bg" x="-12" y="-9" width="24" height="18" rx="3"/><text class="hwy-shield-text" y="3">10</text></g>
+          <!-- I-45 N -->
+          <g transform="translate(615,250)"><rect class="hwy-shield-bg" x="-12" y="-9" width="24" height="18" rx="3"/><text class="hwy-shield-text" y="3">45</text></g>
+          <!-- I-45 S -->
+          <g transform="translate(610,820)"><rect class="hwy-shield-bg" x="-12" y="-9" width="24" height="18" rx="3"/><text class="hwy-shield-text" y="3">45</text></g>
+          <!-- I-69 / US-59 SW -->
+          <g transform="translate(390,720)"><rect class="hwy-shield-bg" x="-12" y="-9" width="24" height="18" rx="3"/><text class="hwy-shield-text" y="3">69</text></g>
+          <!-- I-69 / US-59 NE -->
+          <g transform="translate(745,400)"><rect class="hwy-shield-bg" x="-12" y="-9" width="24" height="18" rx="3"/><text class="hwy-shield-text" y="3">69</text></g>
+          <!-- US-290 -->
+          <g transform="translate(370,375)"><rect class="hwy-shield-bg" x="-14" y="-9" width="28" height="18" rx="3"/><text class="hwy-shield-text" y="3">290</text></g>
+          <!-- TX-288 -->
+          <g transform="translate(548,820)"><rect class="hwy-shield-bg" x="-14" y="-9" width="28" height="18" rx="3"/><text class="hwy-shield-text" y="3">288</text></g>
+          <!-- TX-225 -->
+          <g transform="translate(808,602)"><rect class="hwy-shield-bg" x="-14" y="-9" width="28" height="18" rx="3"/><text class="hwy-shield-text" y="3">225</text></g>
+        </g>
+
+        <!-- ===== Zones (more organic shapes) ===== -->
         <g id="zones">
           <polygon class="zone" data-zone="downtown" fill="var(--z-downtown)" stroke="#2a3548"
-            points="475,475 525,470 545,495 540,525 510,540 475,535 460,510" />
+            points="588,520 610,515 625,525 630,540 622,557 605,565 585,562 575,548 578,532" />
           <polygon class="zone" data-zone="midtown" fill="var(--z-midtown)" stroke="#6f5263"
-            points="430,540 475,535 510,540 515,580 480,600 435,590 420,565" />
+            points="540,570 578,565 595,585 590,615 568,640 538,648 512,632 506,605 518,582" />
           <polygon class="zone" data-zone="heights" fill="var(--z-heights)" stroke="#5e6f43"
-            points="410,400 470,395 480,440 470,475 425,480 395,455 390,425" />
+            points="510,440 552,438 575,455 572,485 548,500 510,498 488,478 492,455" />
           <polygon class="zone" data-zone="galleria" fill="var(--z-galleria)" stroke="#8a5e25"
-            points="335,485 395,490 420,520 410,560 365,575 325,555 315,515" />
+            points="438,505 482,498 508,512 512,540 492,565 452,575 422,562 412,538 418,515" />
           <polygon class="zone" data-zone="memorial" fill="var(--z-memorial)" stroke="#7d7048"
-            points="200,440 285,435 320,470 310,520 245,535 185,510 175,470" />
+            points="320,475 392,465 415,478 422,508 392,528 348,532 310,522 295,502" />
           <polygon class="zone" data-zone="katy" fill="var(--z-katy)" stroke="#827552"
-            points="50,440 145,430 175,470 165,520 90,540 35,515 25,475" />
+            points="115,475 200,460 245,478 258,510 240,548 165,562 110,552 92,520 90,492" />
           <polygon class="zone" data-zone="sugarland" fill="var(--z-sugar)" stroke="#8d6a37"
-            points="240,650 320,640 365,680 355,725 280,745 210,720 205,680" />
+            points="305,665 378,655 418,680 422,720 388,748 322,758 272,738 262,705 280,680" />
           <polygon class="zone" data-zone="pearland" fill="var(--z-pearland)" stroke="#825e4d"
-            points="430,690 510,685 555,725 540,770 470,790 410,760 400,720" />
+            points="500,690 568,682 608,710 615,745 588,778 530,790 482,778 458,748 462,712" />
           <polygon class="zone" data-zone="friendswood" fill="var(--z-friend)" stroke="#5e6c7a"
-            points="555,755 625,755 670,790 660,840 595,860 545,830 540,790" />
+            points="618,770 685,768 722,800 728,840 705,870 650,880 612,860 602,825 608,792" />
           <polygon class="zone" data-zone="clearlake" fill="var(--z-clear)" stroke="#406769"
-            points="660,720 740,720 760,755 740,805 685,815 645,790 645,750" />
+            points="725,728 788,725 815,755 815,795 790,820 740,815 715,790 712,755" />
           <polygon class="zone" data-zone="pasadena" fill="var(--z-pasadena)" stroke="#4f4c40"
-            points="600,510 700,510 740,545 745,590 695,615 625,615 595,575" />
+            points="660,520 720,515 770,528 815,545 855,560 855,592 808,612 740,622 685,618 650,605 642,575 645,545" />
           <polygon class="zone" data-zone="northside" fill="var(--z-northside)" stroke="#674c33"
-            points="475,300 555,295 590,330 585,370 530,395 475,385 450,345" />
+            points="540,330 615,325 650,355 650,395 620,420 560,415 520,395 510,360" />
           <polygon class="zone" data-zone="thewoodlands" fill="var(--z-woodlands)" stroke="#3f5b3b"
-            points="430,90 530,85 575,125 570,175 510,200 440,185 410,140" />
+            points="490,150 575,145 615,170 618,210 590,235 520,238 472,225 458,195 462,170" />
           <polygon class="zone" data-zone="humble" fill="var(--z-humble)" stroke="#506b53"
-            points="610,260 685,260 715,300 705,345 660,355 615,335 600,300" />
+            points="665,290 740,290 775,320 770,365 740,385 685,380 655,360 650,322" />
+        </g>
+
+        <!-- ===== Landmarks ===== -->
+        <g>
+          <!-- IAH airport -->
+          <circle class="landmark-dot" cx="610" cy="362" r="4" />
+          <text class="landmark-label" x="610" y="350">✈ IAH</text>
+          <!-- Hobby airport -->
+          <circle class="landmark-dot" cx="660" cy="660" r="4" />
+          <text class="landmark-label" x="660" y="650">✈ HOU</text>
+          <!-- NASA JSC -->
+          <circle class="landmark-dot" cx="765" cy="772" r="4" />
+          <text class="landmark-label" x="765" y="762">JSC</text>
+          <!-- Port of Houston -->
+          <circle class="landmark-dot" cx="730" cy="608" r="4" />
+          <text class="landmark-label" x="752" y="612">Port</text>
+          <!-- Texas Medical Center -->
+          <circle class="landmark-dot" cx="556" cy="610" r="3.5" />
+          <text class="landmark-label" x="556" y="600">TMC</text>
+          <!-- San Jacinto Monument -->
+          <circle class="landmark-dot" cx="800" cy="600" r="3" />
+          <text class="landmark-label" x="800" y="590">San Jacinto</text>
         </g>
 
         <!-- Compass rose -->
-        <g transform="translate(70,90)">
-          <circle class="compass-ring" r="28" />
-          <polygon class="compass-needle-n" points="0,-22 5,0 0,-3 -5,0" />
-          <polygon class="compass-needle-s" points="0,22 5,0 0,3 -5,0" />
-          <polygon class="compass-needle-s" points="-22,0 0,5 -3,0 0,-5" />
-          <polygon class="compass-needle-s" points="22,0 0,5 3,0 0,-5" />
-          <text class="compass-letter" y="-12">N</text>
+        <g transform="translate(85,105)">
+          <circle class="compass-ring" r="32" />
+          <polygon class="compass-needle-n" points="0,-26 6,0 0,-3 -6,0" />
+          <polygon class="compass-needle-s" points="0,26 6,0 0,3 -6,0" />
+          <polygon class="compass-needle-s" points="-26,0 0,6 -3,0 0,-6" />
+          <polygon class="compass-needle-s" points="26,0 0,6 3,0 0,-6" />
+          <text class="compass-letter" y="-15">N</text>
         </g>
 
         <!-- Scale bar -->
-        <g transform="translate(60,940)">
+        <g transform="translate(75,1035)">
           <line class="scale-line" x1="0" y1="0" x2="120" y2="0" />
           <line class="scale-line" x1="0" y1="-4" x2="0" y2="4" />
           <line class="scale-line" x1="60" y1="-3" x2="60" y2="3" />
@@ -616,27 +830,30 @@
           <text class="scale-text" x="120" y="18">20 mi</text>
         </g>
 
-        <!-- Labels -->
+        <!-- Zone Labels -->
         <g id="labels">
-          <text class="zone-label" x="500" y="510">Downtown</text>
-          <text class="zone-label" x="468" y="572">Midtown</text>
-          <text class="zone-label" x="437" y="442">Heights</text>
-          <text class="zone-label" x="367" y="528">Galleria</text>
-          <text class="zone-label" x="245" y="487">Memorial</text>
-          <text class="zone-label" x="98" y="487">Katy</text>
-          <text class="zone-label" x="285" y="695">Sugar Land</text>
-          <text class="zone-label" x="478" y="742">Pearland</text>
-          <text class="zone-label" x="603" y="810">Friendswood</text>
-          <text class="zone-label" x="700" y="770">Clear Lake</text>
-          <text class="zone-label" x="668" y="565">Pasadena</text>
-          <text class="zone-label" x="520" y="348">Northside</text>
-          <text class="zone-label" x="495" y="145">The Woodlands</text>
-          <text class="zone-label" x="657" y="305">Humble</text>
+          <text class="zone-label" x="603" y="544">Downtown</text>
+          <text class="zone-label" x="552" y="612">Midtown</text>
+          <text class="zone-label" x="535" y="472">Heights</text>
+          <text class="zone-label" x="465" y="538">Galleria</text>
+          <text class="zone-label" x="362" y="500">Memorial</text>
+          <text class="zone-label" x="170" y="515">Katy</text>
+          <text class="zone-label" x="345" y="710">Sugar Land</text>
+          <text class="zone-label" x="535" y="740">Pearland</text>
+          <text class="zone-label" x="668" y="826">Friendswood</text>
+          <text class="zone-label" x="765" y="775">Clear Lake</text>
+          <text class="zone-label" x="745" y="572">Pasadena</text>
+          <text class="zone-label" x="580" y="378">Northside</text>
+          <text class="zone-label" x="540" y="195">The Woodlands</text>
+          <text class="zone-label" x="713" y="338">Humble</text>
         </g>
 
-        <text class="water-label" x="858" y="730">GALVESTON BAY</text>
-        <text class="water-label" x="710" y="245" font-size="9">L. HOUSTON</text>
-        <text class="water-label" x="540" y="495" font-size="9" opacity="0.6">Buffalo Bayou →</text>
+        <!-- Water labels -->
+        <text class="water-label" x="985" y="855">GALVESTON BAY</text>
+        <text class="water-label" x="1085" y="710" font-size="9">TRINITY BAY</text>
+        <text class="water-label" x="810" y="385" font-size="10">LAKE HOUSTON</text>
+        <text class="water-label" x="475" y="565" font-size="9" opacity="0.7">Buffalo Bayou →</text>
+        <text class="water-label" x="855" y="500" font-size="9" opacity="0.7">San Jacinto R.</text>
       </svg>
     </div>
 
