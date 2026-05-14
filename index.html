@@ -636,6 +636,257 @@
     border-bottom: 1px dotted var(--terracotta-soft);
   }
 
+  /* ===== Stop badges on map ===== */
+  .stop-badge-bg {
+    fill: var(--terracotta);
+    stroke: #fbf6ea;
+    stroke-width: 2;
+    pointer-events: none;
+  }
+  .stop-badge-text {
+    fill: #fbf6ea;
+    font-family: ui-sans-serif, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+    letter-spacing: 0.2px;
+  }
+
+  /* ===== Journey nav (prev / next) ===== */
+  .journey-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: -4px 0 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .nav-btn {
+    flex: 1;
+    font-family: "Iowan Old Style", serif;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    line-height: 1.3;
+  }
+  .nav-btn .arrow {
+    color: var(--terracotta);
+    font-weight: 700;
+  }
+  .nav-btn .nav-label {
+    display: block;
+    font-size: 9.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .nav-btn:hover {
+    background: rgba(194, 97, 58, 0.06);
+    border-color: var(--terracotta);
+    color: var(--ink);
+  }
+  .nav-btn.next { text-align: right; }
+  .stop-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--terracotta);
+    color: #fbf6ea;
+    padding: 4px 11px 4px 5px;
+    border-radius: 999px;
+    font-family: ui-sans-serif, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .stop-pill .num {
+    background: #fbf6ea;
+    color: var(--terracotta);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 11px;
+  }
+  .stop-pill .part {
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 10px;
+    opacity: 0.95;
+  }
+
+  /* ===== "On Your Visit" section ===== */
+  .visit {
+    background: linear-gradient(135deg, rgba(194, 97, 58, 0.07) 0%, rgba(198, 150, 53, 0.06) 100%);
+    border: 1px solid rgba(194, 97, 58, 0.2);
+    border-radius: 10px;
+    padding: 18px 20px 14px;
+    margin-bottom: 22px;
+  }
+  .visit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(194, 97, 58, 0.2);
+  }
+  .visit-header .label {
+    font-family: "Iowan Old Style", serif;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 700;
+  }
+  .visit-header .duration {
+    color: var(--ink-mute);
+    font-size: 11.5px;
+    font-style: italic;
+    font-family: "Iowan Old Style", serif;
+  }
+  .visit-row {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(216, 201, 174, 0.45);
+    align-items: start;
+  }
+  .visit-row:last-child { border-bottom: none; }
+  .visit-row .verb {
+    color: var(--terracotta);
+    font-family: "Iowan Old Style", serif;
+    font-style: italic;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: lowercase;
+    padding-top: 1px;
+    text-align: right;
+  }
+  .visit-row .content {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .visit-row .content ul {
+    margin: 0; padding: 0;
+    list-style: none;
+  }
+  .visit-row .content ul li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 3px;
+  }
+  .visit-row .content ul li:last-child { margin-bottom: 0; }
+  .visit-row .content ul li::before {
+    content: "·";
+    position: absolute;
+    left: 4px;
+    color: var(--terracotta);
+    font-weight: 700;
+  }
+
+  /* ===== Journey intro (empty state replacement) ===== */
+  .journey-intro {
+    text-align: left;
+    width: 100%;
+  }
+  .journey-intro .ji-eyebrow {
+    color: var(--terracotta);
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .journey-intro h2 {
+    font-family: "Iowan Old Style", serif;
+    font-size: 22px;
+    margin: 0 0 12px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .journey-intro p {
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.6;
+    font-family: "Iowan Old Style", serif;
+    margin: 0 0 14px;
+  }
+  .journey-parts {
+    margin: 16px 0 18px;
+    border-top: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+    padding: 12px 0;
+  }
+  .journey-part {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 10px;
+    padding: 6px 0;
+    align-items: baseline;
+  }
+  .journey-part .pn {
+    font-family: "Iowan Old Style", serif;
+    font-size: 11px;
+    color: var(--terracotta);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .journey-part .pt {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .journey-part .pt strong { color: var(--ink); font-weight: 700; }
+  .begin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--terracotta);
+    color: #fbf6ea;
+    padding: 12px 22px;
+    border-radius: 999px;
+    border: none;
+    font-family: "Iowan Old Style", serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+    margin-top: 8px;
+  }
+  .begin-btn:hover { background: #a14e2c; }
+  .begin-btn .arrow { font-size: 16px; }
+  .posture {
+    margin-top: 18px;
+    padding: 12px 14px;
+    background: rgba(111, 140, 112, 0.08);
+    border-left: 3px solid var(--sage);
+    border-radius: 4px;
+    font-family: "Iowan Old Style", serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .posture strong { color: var(--sage); font-style: normal; font-weight: 700; }
+
   /* ===== Footer ===== */
   footer {
     border-top: 1px solid var(--rule);
@@ -717,10 +968,10 @@
 <div class="app">
   <header>
     <div class="brand">
-      <span class="eyebrow">Ministry Field Guide · Houston</span>
+      <span class="eyebrow">A Missions Journey · 14 Stops · Greater Houston</span>
     </div>
-    <h1>To Reach the Unreached</h1>
-    <div class="subtitle">A people-groups map of Greater Houston — one of the most ethnically diverse cities in North America, and a strategic gateway to the nations. Click any region to see who lives there, what they believe, and how to pray.</div>
+    <h1>Walking Houston for the Nations</h1>
+    <div class="subtitle">A two-week field journey through fourteen neighborhoods — to see, taste, walk, and pray for the unreached communities God has gathered into this city. Begin with Stop 1, or click any region on the map to jump in.</div>
   </header>
 
   <main>
@@ -953,6 +1204,38 @@
           <text class="zone-label" x="713" y="338">Humble</text>
         </g>
 
+        <!-- ===== Stop number badges (journey order) ===== -->
+        <g id="stop-badges">
+          <!-- 1 Downtown -->
+          <g transform="translate(640,532)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">1</text></g>
+          <!-- 2 Midtown -->
+          <g transform="translate(595,615)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">2</text></g>
+          <!-- 3 Heights -->
+          <g transform="translate(497,448)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">3</text></g>
+          <!-- 4 The Woodlands -->
+          <g transform="translate(610,168)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">4</text></g>
+          <!-- 5 Memorial -->
+          <g transform="translate(305,478)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">5</text></g>
+          <!-- 6 Humble -->
+          <g transform="translate(770,302)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">6</text></g>
+          <!-- 7 Galleria/Hillcroft -->
+          <g transform="translate(425,520)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">7</text></g>
+          <!-- 8 Sugar Land -->
+          <g transform="translate(412,672)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">8</text></g>
+          <!-- 9 Katy -->
+          <g transform="translate(135,490)"><circle class="stop-badge-bg" r="11" /><text class="stop-badge-text">9</text></g>
+          <!-- 10 Northside -->
+          <g transform="translate(645,348)"><circle class="stop-badge-bg" r="13" /><text class="stop-badge-text">10</text></g>
+          <!-- 11 Pearland -->
+          <g transform="translate(605,705)"><circle class="stop-badge-bg" r="13" /><text class="stop-badge-text">11</text></g>
+          <!-- 12 Friendswood -->
+          <g transform="translate(720,792)"><circle class="stop-badge-bg" r="13" /><text class="stop-badge-text">12</text></g>
+          <!-- 13 Clear Lake -->
+          <g transform="translate(810,748)"><circle class="stop-badge-bg" r="13" /><text class="stop-badge-text">13</text></g>
+          <!-- 14 Pasadena -->
+          <g transform="translate(848,558)"><circle class="stop-badge-bg" r="13" /><text class="stop-badge-text">14</text></g>
+        </g>
+
         <!-- Water labels -->
         <text class="water-label" x="985" y="855">GALVESTON BAY</text>
         <text class="water-label" x="1085" y="710" font-size="9">TRINITY BAY</text>
@@ -963,10 +1246,36 @@
     </div>
 
     <aside id="panel" class="panel empty">
-      <div class="empty-state">
-        <div class="seal">✦</div>
-        <h2>Begin with prayer</h2>
-        <p>Select any region on the map to see the people groups present, the spiritual landscape, and how to pray for that community.</p>
+      <div class="journey-intro">
+        <div class="ji-eyebrow">The Journey · 14 Stops</div>
+        <h2>A field walk through Greater Houston for the sake of the nations.</h2>
+        <p>Houston is one of the most ethnically diverse cities in North America. Refugees from Afghanistan, Iraq, Somalia, Burma, and Bhutan; Hindu families from Gujarat; Pakistani and Iranian Muslims; Vietnamese Buddhists; Chinese, Korean, Filipino, Latin American, and African neighbors all live here — many within an hour's drive of each other.</p>
+        <p>This is a fourteen-stop journey to <em>see, taste, walk,</em> and <em>pray</em> through the city. It is sequenced not by geography but by missiological priority — orient first, then visit your sending bases, then walk the field where the unreached actually live.</p>
+
+        <div class="journey-parts">
+          <div class="journey-part">
+            <div class="pn">Part I</div>
+            <div class="pt"><strong>Orient</strong> · Stops 1–3 — see the city's center, its post-Christian pulse, its cultural Christianity</div>
+          </div>
+          <div class="journey-part">
+            <div class="pn">Part II</div>
+            <div class="pt"><strong>Bases</strong> · Stops 4–6 — the sending suburbs and where laborers are equipped</div>
+          </div>
+          <div class="journey-part">
+            <div class="pn">Part III</div>
+            <div class="pt"><strong>Field</strong> · Stops 7–10 — the strategic corridors where unreached peoples live</div>
+          </div>
+          <div class="journey-part">
+            <div class="pn">Part IV</div>
+            <div class="pt"><strong>Margins</strong> · Stops 11–14 — multi-ethnic suburbia, Vietnamese, Hispanic east</div>
+          </div>
+        </div>
+
+        <button class="begin-btn" id="begin-btn">Begin at Stop 1 · Downtown <span class="arrow">→</span></button>
+
+        <div class="posture">
+          <strong>Posture:</strong> Be a learner before a witness. Eat the food, ask the questions, listen for the stories. Do not photograph people without permission. Pray <em>as you walk</em>, not <em>at people</em>. Trust the Spirit to put a name and a face in your path.
+        </div>
       </div>
     </aside>
   </main>
@@ -987,6 +1296,22 @@
 </div>
 
 <script>
+/* Journey order: missiological priority, not geographic. Orient → bases → field → margins. */
+const JOURNEY_ORDER = [
+  'downtown', 'midtown', 'heights',
+  'thewoodlands', 'memorial', 'humble',
+  'galleria', 'sugarland', 'katy', 'northside',
+  'pearland', 'friendswood', 'clearlake', 'pasadena'
+];
+const PARTS = {
+  1: 'I · Orient', 2: 'I · Orient', 3: 'I · Orient',
+  4: 'II · Bases', 5: 'II · Bases', 6: 'II · Bases',
+  7: 'III · Field', 8: 'III · Field', 9: 'III · Field', 10: 'III · Field',
+  11: 'IV · Margins', 12: 'IV · Margins', 13: 'IV · Margins', 14: 'IV · Margins'
+};
+function stopNumber(id) { return JOURNEY_ORDER.indexOf(id) + 1; }
+function stopAt(n) { return JOURNEY_ORDER[(n - 1 + 14) % 14]; }
+
 /* Status legend: "unreached" = <2% evangelical (Joshua Project def), often Hindu/Muslim/Buddhist;
    "less-reached" = some witness present but church not indigenous to the people group;
    "reached" = established gospel-rooted community.
@@ -1011,7 +1336,16 @@ const ZONE_DATA = {
       "For unity and revival among historic downtown Black churches.",
       "For dignified, gospel-saturated mercy ministry among the unhoused."
     ],
-    hook: "From Houston's center, every people group in the metro is within reach."
+    hook: "From Houston's center, every people group in the metro is within reach.",
+    visit: {
+      duration: "2–3 hours · morning",
+      see: ["The skyline from Sabine Street Bridge in Buffalo Bayou Park", "Discovery Green at lunch — watch the languages cross", "The contrast between corporate towers and the unhoused communities near GRB"],
+      taste: "Coffee at a downtown café — stay long enough to overhear three different conversations.",
+      walk: "Walk Buffalo Bayou Park along the bayou. Stand at a high point and pray Acts 17:26–27 over the city.",
+      meet: "Houston's First Baptist (downtown campus) for prayer; Star of Hope Mission for unhoused ministry context.",
+      ask: ["Where in Houston do you think God is at work?", "What surprises visitors most about this city?"],
+      read: "Re-read Acts 17:24–31 with the Houston map in your hand."
+    }
   },
 
   midtown: {
@@ -1031,7 +1365,16 @@ const ZONE_DATA = {
       "For believers to engage with humility, not retreat in fear.",
       "For LGBTQ+ neighbors to encounter the love and welcome of Jesus."
     ],
-    hook: "Where Houston is most secular — and most spiritually open if approached with grace."
+    hook: "Where Houston is most secular — and most spiritually open if approached with grace.",
+    visit: {
+      duration: "2–3 hours · lunch",
+      see: ["Westheimer / Lower Westheimer at lunch — Houston's secular cultural pulse", "The Menil Collection grounds (free, contemplative)", "Rothko Chapel — sit in silence for 15 minutes"],
+      taste: "Lunch at any restaurant on Westheimer between Bagby and Mandell — observe who's eating with whom.",
+      walk: "Walk Westheimer Road for thirty minutes praying for Houston's most de-churched district.",
+      meet: "Local church plants engaging the area (e.g., Sojourn Heights, Restoration Houston).",
+      ask: ["What do people here think of organized religion?", "Where do you go to think deeply about life?"],
+      read: "Tim Keller, Center Church — chapters on engaging post-Christian cities."
+    }
   },
 
   heights: {
@@ -1050,7 +1393,16 @@ const ZONE_DATA = {
       "For gentrification to be confronted with gospel-shaped justice.",
       "For unity between new church plants and historic parishes."
     ],
-    hook: "Heights families look reached on the surface — but cultural Christianity isn't the same as Christ."
+    hook: "Heights families look reached on the surface — but cultural Christianity isn't the same as Christ.",
+    visit: {
+      duration: "1–2 hours · afternoon",
+      see: ["19th Street boutique strip and historic bungalows", "White Oak Bayou Hike-and-Bike Trail", "Older Hispanic neighborhoods south of I-10 — see the gentrification line"],
+      taste: "Coffee at any 11th Street café; take it on the trail.",
+      walk: "Walk White Oak Bayou trail for thirty minutes praying that cultural-Christian families would become disciples.",
+      meet: "A historic Hispanic Catholic parish + a new evangelical plant — see both worlds.",
+      ask: ["Did you grow up going to church? What changed for you?", "How long has your family been in this neighborhood?"],
+      read: "Michael Horton, Christless Christianity — on cultural Christianity vs. living faith."
+    }
   },
 
   galleria: {
@@ -1071,7 +1423,16 @@ const ZONE_DATA = {
       "For laborers willing to learn Urdu, Hindi, or Gujarati.",
       "For Anglo-majority churches to repent of insularity and pursue their unreached neighbors."
     ],
-    hook: "The mall is just the surface — under it runs the Hillcroft corridor: Houston's Hindu and Muslim heart."
+    hook: "The mall is just the surface — under it runs the Hillcroft corridor: Houston's Hindu and Muslim heart.",
+    visit: {
+      duration: "Half day · the most important stop",
+      see: ["Drive Hillcroft Avenue from Westheimer south to Bissonnet — sari shops, Indian jewelry, sweet shops, halal grocers, mosques", "Mahatma Gandhi District signage and the main Hindu/Indian commercial strip", "The Pakistani / Iranian sub-corridor along Hillcroft"],
+      taste: "Lunch at Himalaya (Pakistani-Indian, James Beard finalist) or Bombay Brasserie. Buy mithai (sweets) at a family sweet shop. Pick up groceries at Patel Brothers.",
+      walk: "Prayer-walk Hillcroft Avenue from Westheimer to Bissonnet. Pray for Gujarati Hindus, Pakistani Muslims, and Iranian neighbors by face as you pass them.",
+      meet: "Global Gates Houston (works specifically with UPGs in this corridor — globalgates.info). Look for any South Asian-led church plants nearby.",
+      ask: ["How long has your family been in Houston?", "What do you miss most about home?", "What has your experience of Christians been?"],
+      read: "Joshua Project's Gujarati people group profile; Sam George, Diaspora Christianities."
+    }
   },
 
   memorial: {
@@ -1090,7 +1451,16 @@ const ZONE_DATA = {
       "For affluent Memorial families to recognize unreached neighbors and act.",
       "For Christian businesspeople to see their work as sending strategy."
     ],
-    hook: "Reach an Energy Corridor expat in Houston, and you may have just reached a country."
+    hook: "Reach an Energy Corridor expat in Houston, and you may have just reached a country.",
+    visit: {
+      duration: "2–3 hours · weekday morning",
+      see: ["BP, Shell, Wood, Technip Energies campuses along Eldridge", "Memorial Park (1,500 acres — early morning brings out international families)", "Expat housing along Highway 6 and Eldridge", "International schools (British, German, French) — note the flags"],
+      taste: "Lunch at an Energy Corridor restaurant where expats gather (Highway 6 and Eldridge).",
+      walk: "Walk Memorial Park's Seymour Lieberman trail at 7am — pray for international neighbors as you go.",
+      meet: "Christian Business Men's Connection (CBMC) Houston; ask about expat / international networks at major Memorial churches.",
+      ask: ["Where are you from? How long are you here?", "What do you miss most about home?"],
+      read: "Mark Greene, Thank God It's Monday — vocation as mission field."
+    }
   },
 
   katy: {
@@ -1112,7 +1482,16 @@ const ZONE_DATA = {
       "For 2nd-generation Indian, Chinese, and Pakistani youth to find Christ.",
       "For believing parents to disciple kids into cross-cultural friendship."
     ],
-    hook: "Katy ISD is a mission field. The kids on your kid's team come from a hundred unreached homes."
+    hook: "Katy ISD is a mission field. The kids on your kid's team come from a hundred unreached homes.",
+    visit: {
+      duration: "2–3 hours · evening best",
+      see: ["Katy Asia Town along Westheimer Pkwy — 99 Ranch Market and Asian retail", "H Mart and the Korean / pan-Asian retail corridor", "LaCenterra at Cinco Ranch in the evening — watch the multi-ethnic suburban families", "A Hindu temple or mosque off Highway 99"],
+      taste: "Korean BBQ at H Mart food court, or a family-run Pakistani/Indian spot off I-10.",
+      walk: "Walk LaCenterra in the evening; sit and observe the families that gather. Pray for Katy ISD students by description as they pass.",
+      meet: "Kingsland Baptist (sending church); ask staff about UPG engagement in their neighborhoods. Other Katy multi-ethnic plants worth visiting.",
+      ask: ["Where did your family live before Katy?", "How do your kids handle going to school with so many cultures?"],
+      read: "Mark DeYmaz, Building a Healthy Multi-Ethnic Church."
+    }
   },
 
   sugarland: {
@@ -1135,7 +1514,16 @@ const ZONE_DATA = {
       "For Sugar Land's affluent believers to disciple cross-culturally.",
       "For breakthrough among Gujarati Hindus, where there is virtually no indigenous gospel movement worldwide."
     ],
-    hook: "If India is hard to enter, Sugar Land is open. The unreached have come to us."
+    hook: "If India is hard to enter, Sugar Land is open. The unreached have come to us.",
+    visit: {
+      duration: "Half day",
+      see: ["BAPS Shri Swaminarayan Mandir (Stafford, just north of Sugar Land) — among the largest Hindu temples in North America, open for visitor tours", "Sri Meenakshi Temple (Pearland, often visited from Sugar Land)", "Sikh Center of the Gulf Coast Area", "Imperial Sugar refinery historic site and Sugar Land Town Square"],
+      taste: "South Indian dosa or thali for lunch; chaat at a sweet shop; visit an Indian grocery to see what 'home' looks like in the pantry.",
+      walk: "Walk the BAPS Mandir grounds during open hours (remove shoes, dress modestly). Pray silently as you take in the worship space. Pray for Gujarati Hindus by name as you walk Sugar Land Town Square.",
+      meet: "South Asian-led fellowships (e.g., diaspora-focused churches in Sugar Land/Stafford). Ask: who is engaging the Hindu/Sikh/Muslim communities here?",
+      ask: ["What does your faith mean to you and your family?", "Have you ever been invited to a Christian's home?"],
+      read: "Ravi Tiwari & Robin Thomson, Christ in the New Hindu Diaspora; Joshua Project on Gujarati and Punjabi Sikh peoples."
+    }
   },
 
   pearland: {
@@ -1157,7 +1545,16 @@ const ZONE_DATA = {
       "For 2nd-generation Asian Pearland kids to encounter Christ in school and sport.",
       "For Spanish-speaking and English-speaking believers to plant together."
     ],
-    hook: "Pearland is a preview of the next America — and a preview of what the church must become."
+    hook: "Pearland is a preview of the next America — and a preview of what the church must become.",
+    visit: {
+      duration: "2 hours",
+      see: ["Shadow Creek Ranch — one of Texas's largest master-planned communities, deeply multi-ethnic", "Sri Meenakshi Temple (just inside Pearland) — major South Indian temple", "Vietnamese groceries and restaurants along Pearland Pkwy", "Pearland Town Center"],
+      taste: "Pho or banh mi at a Vietnamese restaurant.",
+      walk: "Drive Shadow Creek Ranch subdivisions. Notice the diversity of every street. Pray for multi-ethnic churches that look like the actual neighborhoods.",
+      meet: "A Pearland multi-ethnic church plant; ask about how they navigate cultural differences.",
+      ask: ["Why did your family choose Pearland?", "What do you wish more people knew about your culture?"],
+      read: "Bryan Loritts, Right Color, Wrong Culture."
+    }
   },
 
   clearlake: {
@@ -1177,7 +1574,16 @@ const ZONE_DATA = {
       "For believing scientists and engineers to integrate faith and vocation publicly.",
       "For international JSC partners to encounter Christ during their assignment."
     ],
-    hook: "Engineers go to the moon from here. Pray they reach Heaven too — and bring their Vietnamese neighbors with them."
+    hook: "Engineers go to the moon from here. Pray they reach Heaven too — and bring their Vietnamese neighbors with them.",
+    visit: {
+      duration: "3 hours",
+      see: ["Vietnamese Buddhist temples (e.g., Linh Son in the area) and Vietnamese Catholic churches", "Space Center Houston / Johnson Space Center visitor area", "Clear Lake waterfront", "Vietnamese commercial strips along Hwy 3 and El Camino Real"],
+      taste: "Pho or banh mi at a Vietnamese restaurant — many family-run and warmly conversational.",
+      walk: "Walk along Clear Lake at sunset. Drive past a Vietnamese Buddhist temple — pray for unreached Vietnamese Buddhist neighbors.",
+      meet: "A Vietnamese Christian church (several in the area). Ask: how do you reach your Buddhist relatives?",
+      ask: ["What gives life meaning?  (good with engineers)", "How long has your family been in Houston?"],
+      read: "John Lennox on faith and science; Tim Keller, The Reason for God."
+    }
   },
 
   pasadena: {
@@ -1197,7 +1603,16 @@ const ZONE_DATA = {
       "For nominal Catholics to encounter living faith in Christ.",
       "For dignified ministry to undocumented neighbors."
     ],
-    hook: "On Houston's industrial edge, the gospel often arrives in Spanish."
+    hook: "On Houston's industrial edge, the gospel often arrives in Spanish.",
+    visit: {
+      duration: "2–3 hours · sunset finish to the journey",
+      see: ["ExxonMobil Baytown complex — the largest in the Western Hemisphere; the scale alone preaches", "San Jacinto Monument and Battleground (where Texas won independence)", "Houston Ship Channel from Lynchburg Ferry (free crossing)", "Pasadena's Hispanic neighborhoods, panaderías, taquerías"],
+      taste: "An authentic taqueria in Pasadena — order in Spanish if you can.",
+      walk: "Walk the San Jacinto Monument grounds at sunset to close the journey. Pray over the city you've now seen with new eyes.",
+      meet: "A Spanish-speaking Pentecostal or Baptist church; ask the pastor how the gospel is moving among working-class Hispanic Houston.",
+      ask: ["How long has your family been here?", "What would you want a Christian to know about your community?"],
+      read: "Re-read Acts 17 in light of everything you've seen this week. Ask: what's my next step?"
+    }
   },
 
   northside: {
@@ -1222,7 +1637,16 @@ const ZONE_DATA = {
       "For Houston believers to volunteer with refugee resettlement.",
       "For laborers fluent in Dari, Arabic, Somali, Nepali, Karen, and Chin."
     ],
-    hook: "The 10/40 Window has come to Houston — and most of it lives within 10 miles of the airport."
+    hook: "The 10/40 Window has come to Houston — and most of it lives within 10 miles of the airport.",
+    visit: {
+      duration: "Half day · the heaviest stop",
+      see: ["Apartment complexes around Greenspoint and along Aldine-Westfield where refugees are first placed", "IAH airport — where new refugees arrive each week", "Halal markets, Afghan & Eritrean restaurants, Coptic/Orthodox church signs"],
+      taste: "Eat at an Afghan, Eritrean, or Somali restaurant. Sit, talk, listen for the story of how the family got here.",
+      walk: "Drive slowly through refugee apartment complexes (respectfully — do not photograph). Park, walk a public space, pray for families recently arrived from Kabul, Mogadishu, Mandalay.",
+      meet: "USCRI Houston (refugees.org/uscri-houston), Interfaith Ministries for Greater Houston, YMCA International Services — all accept volunteers. IM Houston also serves refugees here.",
+      ask: ["Where are you from? When did you arrive in Houston?", "What is the hardest thing about being here?", "Be ready to listen to trauma; do not push."],
+      read: "Sam George, Refugee Diaspora; pray through Operation World by country of origin."
+    }
   },
 
   thewoodlands: {
@@ -1242,7 +1666,16 @@ const ZONE_DATA = {
       "For affluent comfort to not anesthetize believers to lostness.",
       "For Indian and Chinese families moving in to be seen and welcomed."
     ],
-    hook: "If Sharpstown is the field, The Woodlands must be the barn — sending laborers, not stockpiling resources."
+    hook: "If Sharpstown is the field, The Woodlands must be the barn — sending laborers, not stockpiling resources.",
+    visit: {
+      duration: "Half day · Sunday morning ideal",
+      see: ["Town Center waterway and Lake Robbins", "ExxonMobil corporate campus (drive-by)", "Cynthia Woods Mitchell Pavilion grounds", "The deliberate forest preservation through every neighborhood"],
+      taste: "Brunch at Market Street after a Sunday service.",
+      walk: "Sit through a Sunday gathering at Woodlands Church or The Woodlands UMC. Stay for the announcements — listen for what they're sending people to.",
+      meet: "The missions or global outreach office of a major Woodlands church. Ask: what is the church doing about Houston's unreached?",
+      ask: ["How does your church engage with Houston's unreached neighbors?", "Where are your members serving outside this zip code?"],
+      read: "David Platt, Radical — affluent church, global mission."
+    }
   },
 
   humble: {
@@ -1262,7 +1695,16 @@ const ZONE_DATA = {
       "For Spanish-speaking pastors and youth leaders in Humble.",
       "For new families moving in to find a church home quickly."
     ],
-    hook: "The forest hides many homes. Pray that no neighbor stays anonymous."
+    hook: "The forest hides many homes. Pray that no neighbor stays anonymous.",
+    visit: {
+      duration: "2 hours",
+      see: ["Lake Houston park", "Kingwood greenbelts and the preserved pine forest woven through neighborhoods", "Old Humble downtown — oilfield history; the contrast with Kingwood subdivisions"],
+      taste: "Tex-Mex at a longstanding restaurant in old Humble.",
+      walk: "Walk a Kingwood greenbelt for thirty minutes praying that suburban anonymity would be broken by gospel friendship.",
+      meet: "Second Baptist Kingwood; a Spanish-speaking church plant in older Humble.",
+      ask: ["How do you actually meet new neighbors here?", "Where do you see God working in this town?"],
+      read: "Anything by Jay Pathak / Dave Runyon, The Art of Neighboring."
+    }
   },
 
   friendswood: {
@@ -1282,7 +1724,16 @@ const ZONE_DATA = {
       "For believers to befriend international JSC families.",
       "For League City's growth to be met with church-planting fervor."
     ],
-    hook: "Quakers planted the seed here. Pray a new generation tends what they sowed."
+    hook: "Quakers planted the seed here. Pray a new generation tends what they sowed.",
+    visit: {
+      duration: "2 hours",
+      see: ["Friendswood Friends Church (Quaker meeting house, founded 1895)", "Old Friendswood downtown along FM 518", "League City old town and Bay Area Park", "New construction sweeping south of NASA Rd 1"],
+      taste: "A diner or family café in old Friendswood.",
+      walk: "Walk the Friendswood Friends Church grounds. Pray for the Quaker heritage to bear fresh fruit in this generation.",
+      meet: "A Friendswood pastor with deep local roots; a JSC contractor family who can speak to international JSC ministry needs.",
+      ask: ["Did your family come for NASA?", "How has Friendswood's Christian heritage shaped this town?"],
+      read: "On Quaker mission heritage; D. L. Moody on personal call."
+    }
   }
 };
 
@@ -1311,6 +1762,15 @@ function renderCard(id) {
   if (!z) return;
   panel.classList.remove('empty');
 
+  const n = stopNumber(id);
+  const part = PARTS[n] || '';
+  const prevId = stopAt(n - 1);
+  const nextId = stopAt(n + 1);
+  const prevName = ZONE_DATA[prevId].name.split(' /')[0];
+  const nextName = ZONE_DATA[nextId].name.split(' /')[0];
+  const prevN = stopNumber(prevId);
+  const nextN = stopNumber(nextId);
+
   const pgItems = z.peopleGroups.map(p => `
     <li class="pg">
       <div>
@@ -1322,8 +1782,27 @@ function renderCard(id) {
     </li>
   `).join('');
 
+  const v = z.visit || {};
+  const seeContent = Array.isArray(v.see)
+    ? `<ul>${v.see.map(s => `<li>${escapeHTML(s)}</li>`).join('')}</ul>`
+    : escapeHTML(v.see || '');
+  const askContent = Array.isArray(v.ask)
+    ? `<ul>${v.ask.map(s => `<li>${escapeHTML(s)}</li>`).join('')}</ul>`
+    : escapeHTML(v.ask || '');
+
   panel.innerHTML = `
-    <div class="card-eyebrow">People Groups · Ministry Profile</div>
+    <nav class="journey-nav">
+      <button class="nav-btn prev" data-go="${prevId}">
+        <span class="nav-label"><span class="arrow">←</span> Previous · Stop ${prevN}</span>
+        ${escapeHTML(prevName)}
+      </button>
+      <button class="nav-btn next" data-go="${nextId}">
+        <span class="nav-label">Next · Stop ${nextN} <span class="arrow">→</span></span>
+        ${escapeHTML(nextName)}
+      </button>
+    </nav>
+
+    <div class="stop-pill"><span class="num">${n}</span><span class="part">${escapeHTML(part)}</span></div>
     <h2 class="card-name">${escapeHTML(z.name)}</h2>
     <div class="card-meta">
       <span>${escapeHTML(z.county)} County</span>
@@ -1351,6 +1830,21 @@ function renderCard(id) {
       <p class="character">${escapeHTML(z.strategic)}</p>
     </div>
 
+    ${v.duration ? `
+    <div class="visit">
+      <div class="visit-header">
+        <span class="label">On Your Visit</span>
+        <span class="duration">${escapeHTML(v.duration)}</span>
+      </div>
+      <div class="visit-row"><div class="verb">see</div><div class="content">${seeContent}</div></div>
+      <div class="visit-row"><div class="verb">taste</div><div class="content">${escapeHTML(v.taste || '')}</div></div>
+      <div class="visit-row"><div class="verb">walk</div><div class="content">${escapeHTML(v.walk || '')}</div></div>
+      <div class="visit-row"><div class="verb">meet</div><div class="content">${escapeHTML(v.meet || '')}</div></div>
+      <div class="visit-row"><div class="verb">ask</div><div class="content">${askContent}</div></div>
+      <div class="visit-row"><div class="verb">read</div><div class="content">${escapeHTML(v.read || '')}</div></div>
+    </div>
+    ` : ''}
+
     <div class="section">
       <h3>Pray</h3>
       <ul class="pray">
@@ -1364,9 +1858,19 @@ function renderCard(id) {
     </div>
 
     <div class="sources">
-      Data drawn from <a href="https://joshuaproject.net/" target="_blank" rel="noopener">Joshua Project</a> definitions, <a href="https://globalgates.info/unreached-peoples-of-houston/" target="_blank" rel="noopener">Global Gates' Unreached Peoples of Houston</a>, US Census &amp; ACS demographics, and US State Department refugee resettlement reports. Population figures and ethnic concentrations are approximate; verify locally before deploying ministry strategy.
+      Data drawn from <a href="https://joshuaproject.net/" target="_blank" rel="noopener">Joshua Project</a> definitions, <a href="https://globalgates.info/unreached-peoples-of-houston/" target="_blank" rel="noopener">Global Gates' Unreached Peoples of Houston</a>, US Census &amp; ACS demographics, and US State Department refugee resettlement reports. Suggested restaurants, ministries, and resources reflect publicly known options at the time of writing — verify locally before deploying ministry strategy.
     </div>
   `;
+
+  // Wire up prev/next nav
+  panel.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.go;
+      const targetEl = document.querySelector(`.zone[data-zone="${targetId}"]`);
+      if (targetEl) selectZone(targetId, targetEl);
+    });
+  });
+
   panel.scrollTop = 0;
 }
 
@@ -1405,6 +1909,16 @@ studyToggle.addEventListener('change', () => {
 });
 
 document.getElementById('zone-count').textContent = Object.keys(ZONE_DATA).length;
+
+// Begin at Stop 1 (Downtown)
+const beginBtn = document.getElementById('begin-btn');
+if (beginBtn) {
+  beginBtn.addEventListener('click', () => {
+    const firstId = JOURNEY_ORDER[0];
+    const el = document.querySelector(`.zone[data-zone="${firstId}"]`);
+    if (el) selectZone(firstId, el);
+  });
+}
 </script>
 </body>
 </html>
