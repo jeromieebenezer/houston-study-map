@@ -654,6 +654,27 @@
     letter-spacing: 0.2px;
   }
 
+  /* ===== Back to Journey link ===== */
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    color: var(--ink-mute);
+    font-family: "Iowan Old Style", serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 14px;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--terracotta); }
+  .back-link .arrow { color: var(--terracotta); font-size: 13px; font-weight: 700; }
+
   /* ===== Journey nav (prev / next) ===== */
   .journey-nav {
     display: flex;
@@ -1791,6 +1812,8 @@ function renderCard(id) {
     : escapeHTML(v.ask || '');
 
   panel.innerHTML = `
+    <button class="back-link" id="back-to-journey"><span class="arrow">←</span> Back to Journey</button>
+
     <nav class="journey-nav">
       <button class="nav-btn prev" data-go="${prevId}">
         <span class="nav-label"><span class="arrow">←</span> Previous · Stop ${prevN}</span>
@@ -1871,6 +1894,10 @@ function renderCard(id) {
     });
   });
 
+  // Wire up back-to-journey link
+  const backBtn = document.getElementById('back-to-journey');
+  if (backBtn) backBtn.addEventListener('click', showJourneyIntro);
+
   panel.scrollTop = 0;
 }
 
@@ -1910,15 +1937,31 @@ studyToggle.addEventListener('change', () => {
 
 document.getElementById('zone-count').textContent = Object.keys(ZONE_DATA).length;
 
-// Begin at Stop 1 (Downtown)
-const beginBtn = document.getElementById('begin-btn');
-if (beginBtn) {
-  beginBtn.addEventListener('click', () => {
+// Capture the original journey-intro markup so we can restore it on Back.
+const initialPanelHTML = panel.innerHTML;
+
+function wireBeginButton() {
+  const bb = document.getElementById('begin-btn');
+  if (!bb) return;
+  bb.addEventListener('click', () => {
     const firstId = JOURNEY_ORDER[0];
     const el = document.querySelector(`.zone[data-zone="${firstId}"]`);
     if (el) selectZone(firstId, el);
   });
 }
+
+function showJourneyIntro() {
+  panel.innerHTML = initialPanelHTML;
+  panel.classList.add('empty');
+  if (selectedZone) {
+    selectedZone.classList.remove('selected');
+    selectedZone = null;
+  }
+  wireBeginButton();
+  panel.scrollTop = 0;
+}
+
+wireBeginButton();
 </script>
 </body>
 </html>
